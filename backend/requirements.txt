@@ -1,5 +1,5 @@
 fastapi
-uvicorn
+uvicorn[standard]
 prisma
 pandas
 lightgbm
@@ -7,5 +7,9 @@ scikit-learn
 chromadb
 langchain-google-genai
 langchain
+langchain-core
 redis
 shap
+numpy
+python-dotenv
+openpyxl

@@ -1,0 +1,115 @@
+﻿======================================================================
+  JSpark Data Quality Fix Script
+  Run date: 2026-06-27
+  Input:  data
+  Output: data\cleaned
+======================================================================
+
+──────────────────────────────────────────────────────────────────────
+  FILE 01 — Employee Details
+──────────────────────────────────────────────────────────────────────
+  Loaded: 1,042 rows
+  Dropped is_active_version (always 1, no info)
+  Manual job_name fills: 6 employees resolved
+  Derived is_recommended_pool: 590 employees eligible for recommendations
+  Rows in → 1,042 | Rows out → 1,042 (no rows dropped; inactive kept for audit trail)
+    ✓  Saved 01_employees_clean.csv  (1,042 rows × 9 cols)
+
+──────────────────────────────────────────────────────────────────────
+  FILE 02 — Project Details
+──────────────────────────────────────────────────────────────────────
+  Loaded: 2,052 rows
+  Dropped is_active_version, project_key
+  Dropped 13 rows with null project_id (all DEAL LOST, epoch dates 01-01-1970)
+  Flagged 38 ACTIVE projects as overrunning (end date before 2026-06-27)
+  Ramp-down flags: {'30_days': 50, '90_days': 31, '60_days': 13}
+  Added 13 CLIENT_661 synthetic project stubs (inferred from WSR date ranges)
+  Rows in → 2052 | Rows out → 2,052
+    ✓  Saved 02_projects_clean.csv  (2,052 rows × 15 cols)
+
+──────────────────────────────────────────────────────────────────────
+  FILE 03 — Project Allocation Details
+──────────────────────────────────────────────────────────────────────
+  Loaded: 31,969 rows
+  Dropped 27 rows with null project_id (no FK target)
+  Mapped 2279 null employee_ids → 'OPEN_REQ' (open requisitions)
+  Flagged 12,397 rows as placeholder end dates (2030/2035 sentinel values)
+  Categorised 12,395 CLIENT_127 BILLABLE placeholder rows as BAU_OVERHEAD
+      → These are excluded from utilisation calculations (shared overhead, not real project load)
+  Utilisation computed (date-gated, no BAU): 178 employees genuinely over 100%
+  Roll-off flags: 307 unique employees rolling off within 30 days
+  Rows in → 31,969 | Rows out → 31,942
+    ✓  Saved 03_allocations_clean.csv  (31,942 rows × 14 cols)
+
+──────────────────────────────────────────────────────────────────────
+  FILE 04 — Timesheet Details 2026
+──────────────────────────────────────────────────────────────────────
+  Loaded: 128,526 rows
+  Dropped 9 entirely-null or unused columns
+      NOTE: is_billable dropped (100% null in source); use resourcing_status from allocations instead
+  Dropped 2190 rows with employee_id='0' (not in employee file)
+  Dropped 28 rows with null project_id
+  Rows in → 128,526 | Rows out → 126,308
+    ✓  Saved 04_timesheets_clean.csv  (126,308 rows × 11 cols)
+
+──────────────────────────────────────────────────────────────────────
+  FILE 05 — Skill Data
+──────────────────────────────────────────────────────────────────────
+  Loaded: 82,211 rows
+  COE normalised. Final values: {'Data Engineering': 25987, 'TechOps & Automation': 19395, 'Data Science & AI': 15188, 'Full Stack': 9406, 'BI & Reporting': 6480, 'Consulting': 5473, 'GTM': 162, nan: 120}
+  Filled 284 null Skill values from SubSkill column
+  Unique employees with skill records: 286
+  Rows in → 82,211 | Rows out → 82,211
+    ✓  Saved 05_skills_clean.csv  (82,211 rows × 10 cols)
+
+──────────────────────────────────────────────────────────────────────
+  FILE 06 — Competency Details (normalise to long format)
+──────────────────────────────────────────────────────────────────────
+  Sheets found: ['Solution Enabler ', 'Solution Consultant ', 'Senior Software Engineer']
+    Sheet 'Solution Enabler ': 56 employees × 5 dimensions → 280 rows
+    Sheet 'Solution Consultant ': 37 employees × 3 dimensions → 111 rows
+    Sheet 'Senior Software Engineer': 103 employees × 3 dimensions → 309 rows
+  Long-format competency table: 700 rows covering 196 unique employees
+  Dimensions: client_influence, consulting_advisory, techno_functional, communication, ambiguity, capability_articulation, architecture_estimation, project_planning
+    ✓  Saved 06_competency_clean.csv  (700 rows × 8 cols)
+
+──────────────────────────────────────────────────────────────────────
+  FILE 07 — Pipeline Details (Forecast sheet)
+──────────────────────────────────────────────────────────────────────
+  Loaded: 293 rows
+  Role codes normalised. 0 null roles remain (row-level gaps)
+  Parsed % column: 3 mixed-format values resolved
+  SOW Signed after forward-fill: Yes=40, No=253
+  Duration: 251 null Number of Weeks filled with 16-week fallback
+  Dropped 3 output-placeholder columns (entirely null)
+  Pipeline coverage: Jun–Sep 2026. Oct–Dec 2026 has no pipeline data (expected gap).
+  Rows in → 293 | Rows out → 293
+    ✓  Saved 07_pipeline_clean.csv  (293 rows × 26 cols)
+
+──────────────────────────────────────────────────────────────────────
+  FILE 09 — Project Weekly Status Details
+──────────────────────────────────────────────────────────────────────
+  Loaded: 71,205 rows
+  Fixed 33706 CLIENT_661-NNN → CLIENT_661_NNN (dash → underscore)
+  Flagged 20,358 rows as epoch artefacts (week_year < 2000) — excluded from ML training
+  Valid rows for ML training (year >= 2000): 50,847
+  Derived at_risk label: 1,908 rows flagged (2.7%)
+  Rows in → 71,205 | Rows out → 71,205
+    ✓  Saved 09_wsr_clean.csv  (71,205 rows × 19 cols)
+
+──────────────────────────────────────────────────────────────────────
+  POST-FIX VALIDATION
+──────────────────────────────────────────────────────────────────────
+    ✓  Allocation→Employee: all employee_ids resolve
+    ✓  Allocation→Project: all project_ids resolve
+    ✓  Timesheet→Employee: all employee_ids resolve
+    ✓  Timesheet→Project: all project_ids resolve
+    ✓  Skill→Employee: all employee_ids resolve
+    ✓  WSR→Project: all project_id_masked resolve (1773 unique)
+    ✓  Competency→Employee: all employee_ids resolve
+    ✓  projects.project_id: no nulls
+    ✓  allocations.project_id: no nulls
+    ✓  Max realistic utilisation (date-gated, no BAU): 400.0%
+    ✓  Pipeline canonical_role: 0 nulls
+  
+✅ ALL CHECKS PASSED

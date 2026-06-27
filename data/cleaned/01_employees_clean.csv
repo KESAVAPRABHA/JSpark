@@ -1,0 +1,1043 @@
+employee_id,location,date_of_join,date_of_resignation,job_name,department_name,manager_id,account_status,is_recommended_pool
+EMP1,London,06-01-2025,,Associate Consultant,Delivery,EMP62,1,True
+EMP2,New York,02-09-2025,,Associate Consultant,Delivery,EMP557,1,True
+EMP3,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP4,London,02-09-2024,09-06-2026,Associate Consultant,Delivery,EMP571,1,False
+EMP5,Chennai,01-03-2019,,Solutions Consultant,Delivery,EMP166,1,True
+EMP6,Chennai,01-02-2023,,Solutions Enabler,Delivery,EMP610,1,True
+EMP7,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP8,,,,,,,0,False
+EMP9,,,,,,,0,False
+EMP10,Chennai,02-06-2025,,Software Engineer,Delivery,EMP90,1,True
+EMP11,Chennai,24-11-2025,,Senior Software Engineer,Delivery,EMP445,1,True
+EMP12,,,,,,,0,False
+EMP13,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP14,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP15,Chennai,,,,,,0,False
+EMP16,,,,,,,0,False
+EMP17,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP18,London,02-03-2026,,Manager,Delivery,EMP732,1,True
+EMP19,,,,,,,0,False
+EMP20,Chennai,02-05-2022,,Solutions Consultant,Delivery,EMP648,1,True
+EMP21,,,,,,,0,False
+EMP22,London,30-09-2019,,Principal,Delivery,EMP533,1,True
+EMP23,New York,02-09-2025,,Associate Consultant,Delivery,EMP479,1,True
+EMP24,Chennai,05-06-2023,,Solutions Enabler,Delivery,EMP252,1,True
+EMP25,,,,,,,0,False
+EMP26,,,,,Delivery,,0,False
+EMP27,London,12-12-2022,,Senior Consultant,Delivery,EMP275,1,True
+EMP28,,,,,,,0,False
+EMP29,London,11-08-2025,,Principal,Delivery,EMP533,1,True
+EMP30,London,18-03-2013,,Solutions Consultant,Delivery,EMP732,1,True
+EMP31,,,,,,,0,False
+EMP32,Chennai,25-03-2026,,Consultant,Delivery,EMP648,1,True
+EMP33,,,,,,,0,False
+EMP34,,,,,,,0,False
+EMP35,Chennai,,,,,,0,False
+EMP36,Chennai,02-12-2022,,Solutions Consultant,Delivery,EMP357,1,True
+EMP37,London,03-11-2025,,Associate Consultant,Delivery,EMP900,1,True
+EMP38,,,,,,,0,False
+EMP39,London,02-01-2017,,Operations Associate,Support,EMP351,1,False
+EMP40,London,08-07-2024,,Associate Consultant,Delivery,EMP890,1,True
+EMP41,Chennai,,,,,,0,False
+EMP42,,,,,,,0,False
+EMP43,,,,,,,0,False
+EMP44,London,08-07-2024,,Partner,Delivery,EMP351,1,True
+EMP45,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP46,London,20-03-2023,,Head of HR,Support,EMP61,1,False
+EMP47,Chennai,02-06-2025,,Principal Technology Architect,Delivery,EMP483,1,True
+EMP48,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP49,,,,,,,0,False
+EMP50,,,,,,,0,False
+EMP51,,,,,,,0,False
+EMP52,,,,,,,0,False
+EMP53,,,,,,,0,False
+EMP54,,,,,,,0,False
+EMP55,Chennai,23-02-2026,,Software Engineer,Delivery,EMP245,1,True
+EMP56,London,06-01-2025,,Consultant,Delivery,EMP195,1,True
+EMP57,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP750,1,True
+EMP58,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP581,1,True
+EMP59,,,,,,,0,False
+EMP60,New York,06-04-2026,,Associate Consultant,Delivery,EMP805,1,True
+EMP61,London,12-08-2024,,Leadership,Support,EMP351,1,False
+EMP62,London,05-07-2021,,Manager,Delivery,EMP1031,1,True
+EMP63,,,,,,,0,False
+EMP64,New York,19-09-2022,,Senior Consultant,Delivery,EMP684,1,True
+EMP65,Chennai,,,,,,0,False
+EMP66,Chennai,,,,,,0,False
+EMP67,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP68,Chennai,01-06-2021,,Solutions Consultant,Delivery,EMP357,1,True
+EMP69,Chennai,04-11-2025,,Software Engineer,Delivery,EMP1034,1,True
+EMP70,,25-05-2026,,RM Specialist,,EMP61,1,False
+EMP71,,,,,,,0,False
+EMP72,New York,18-05-2026,,,People,EMP186,1,False
+EMP73,,,,,,,0,False
+EMP74,,,,,,,0,False
+EMP75,London,07-04-2026,,Consultant,Delivery,EMP754,1,True
+EMP76,London,05-05-2026,04-11-2026,Senior Legal Counsel,,EMP441,1,False
+EMP77,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP78,Chennai,13-12-2021,,Solutions Enabler,Delivery,EMP636,1,True
+EMP79,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP403,1,True
+EMP80,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP81,,,,,,,0,False
+EMP82,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP83,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP559,1,True
+EMP84,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP85,Chennai,04-11-2025,,Software Engineer,Delivery,EMP582,1,True
+EMP86,Chennai,01-09-2022,,Senior Software Engineer,Delivery,EMP438,1,True
+EMP87,,,,,,,0,False
+EMP88,Chennai,,,,,,0,False
+EMP89,,,,,,,0,False
+EMP90,Chennai,01-02-2023,,Solutions Enabler,Delivery,EMP683,1,True
+EMP91,Chennai,03-06-2024,,Solutions Enabler,Delivery,EMP231,1,True
+EMP92,,,,,,,0,False
+EMP93,,,,,,,0,False
+EMP94,London,25-04-2024,,Senior Associate Consultant,Delivery,EMP809,1,True
+EMP95,Chennai,03-06-2024,,Solutions Enabler,Delivery,EMP952,1,True
+EMP96,New York,07-07-2025,,Associate Consultant,Delivery,EMP152,1,True
+EMP97,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP98,Chennai,01-01-2018,,Senior Solutions Consultant,Delivery,EMP215,1,True
+EMP99,,,,,,,0,False
+EMP100,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP101,,,,,,,0,False
+EMP102,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP490,1,True
+EMP103,Chennai,04-11-2025,,Software Engineer,Delivery,EMP327,1,True
+EMP104,Chennai,02-06-2025,,Software Engineer,Delivery,EMP673,1,True
+EMP105,,,,,,,0,False
+EMP106,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP107,,,,,,,0,False
+EMP108,London,19-08-2024,,Senior Consultant,Delivery,EMP322,1,True
+EMP109,,,,,,,0,False
+EMP110,London,01-09-2025,,Associate Consultant,Delivery,EMP809,1,True
+EMP111,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP569,1,True
+EMP112,New York,08-12-2025,,Associate Consultant,Delivery,EMP64,1,True
+EMP113,,,,,,,0,False
+EMP114,Chennai,02-06-2025,,Software Engineer,Delivery,EMP654,1,True
+EMP115,,,,,,,0,False
+EMP116,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP117,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP118,,,,,,,0,False
+EMP119,Chennai,27-04-2026,,Software Engineer,Delivery,EMP807,1,True
+EMP120,,,,,,,0,False
+EMP121,Chennai,09-03-2026,,Senior Software Engineer,Delivery,EMP476,1,True
+EMP122,,,,,,,0,False
+EMP123,,,,,,,0,False
+EMP124,London,06-10-2025,,Associate Consultant,Delivery,EMP601,1,True
+EMP125,London,07-04-2025,,Associate Consultant,Delivery,EMP937,1,True
+EMP126,New York,05-08-2024,,Operations Lead,Support,EMP46,1,False
+EMP127,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP128,London,06-01-2025,,Senior Associate Consultant,Delivery,EMP195,1,True
+EMP129,New York,02-02-2026,,Senior Associate Consultant,Delivery,EMP306,1,True
+EMP130,,,,,,,0,False
+EMP131,,,,,,,0,False
+EMP132,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP899,1,True
+EMP133,Chennai,03-06-2024,,Senior Software Engineer,Delivery,EMP675,1,True
+EMP134,,,,,,,0,False
+EMP135,London,19-01-2026,,Associate Consultant,Delivery,EMP609,1,True
+EMP136,Chennai,22-07-2024,,Software Engineer,Delivery,EMP899,1,True
+EMP137,Chennai,02-06-2025,,Software Engineer,Delivery,EMP677,1,True
+EMP138,Chennai,02-06-2025,,Software Engineer,Delivery,EMP594,1,True
+EMP139,,,,,,,0,False
+EMP140,,,,,Delivery,,0,False
+EMP141,Chennai,,,,,,0,False
+EMP142,,,,,,,0,False
+EMP143,Chennai,,,,,,0,False
+EMP144,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP145,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP146,,,,,Delivery,,0,False
+EMP147,London,07-04-2026,,Associate Consultant,Delivery,EMP337,1,True
+EMP148,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP149,,,,,,,0,False
+EMP150,,,,,,,0,False
+EMP151,Chennai,01-06-2021,,Solutions Consultant,Delivery,EMP161,1,True
+EMP152,New York,10-06-2024,,Senior Consultant,Delivery,EMP661,1,True
+EMP153,,,,,,,0,False
+EMP154,London,07-04-2026,,Senior Associate Consultant,Delivery,EMP436,1,True
+EMP155,London,02-02-2026,,Associate Consultant,Delivery,EMP811,1,True
+EMP156,,,,,,,0,False
+EMP157,,,,,,,0,False
+EMP158,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP159,Chennai,13-02-2026,,Software Engineer,Delivery,EMP366,1,True
+EMP160,Chennai,05-01-2026,,Software Engineer,Delivery,EMP189,1,True
+EMP161,Chennai,01-07-2020,,Senior Solutions Consultant,Delivery,EMP973,1,True
+EMP162,,,,,,,0,False
+EMP163,Chennai,,,,,,0,False
+EMP164,,,,,,,0,False
+EMP165,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP899,1,True
+EMP166,Chennai,26-05-2025,,Solutions Consultant,Delivery,EMP749,1,True
+EMP167,Chennai,13-12-2021,,Solutions Consultant,Delivery,EMP973,1,True
+EMP168,Chennai,,,,,,0,False
+EMP169,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP170,,,,,,,0,False
+EMP171,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP1026,1,True
+EMP172,London,06-02-2023,12-06-2026,Consultant,Delivery,EMP754,1,False
+EMP173,,,,,,,0,False
+EMP174,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP848,1,True
+EMP175,,,,,,,0,False
+EMP176,,,,,,,0,False
+EMP177,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP178,Chennai,16-02-2026,,Head of Delivery Governance,Delivery,EMP483,1,True
+EMP179,London,04-03-2025,,Senior Associate Consultant,Delivery,EMP615,1,True
+EMP180,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP181,Chennai,,,,,,0,False
+EMP182,,,,,,,0,False
+EMP183,,,,,,,0,False
+EMP184,,,,,,,0,False
+EMP185,Chennai,01-02-2023,,Solutions Enabler,Delivery,EMP904,1,True
+EMP186,New York,12-01-2026,,Senior HRBP,HR,EMP46,1,False
+EMP187,,,,,Delivery,,0,False
+EMP188,,,,,,,0,False
+EMP189,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP425,1,True
+EMP190,Chennai,01-02-2023,,Solutions Enabler,Delivery,EMP1026,1,True
+EMP191,Chennai,15-12-2025,,Senior Software Engineer,Delivery,EMP538,1,True
+EMP192,London,22-07-2024,,Associate Partner,Delivery,EMP44,1,True
+EMP193,London,13-10-2025,,Associate Partner,Delivery,EMP44,1,True
+EMP194,Chennai,29-05-2024,,Solutions Consultant,Delivery,EMP791,1,True
+EMP195,London,04-05-2021,,Senior Consultant,Delivery,EMP907,1,True
+EMP196,London,02-03-2026,,Senior Consultant,Delivery,EMP1036,1,True
+EMP197,London,20-02-2023,,Consultant,Delivery,EMP452,1,True
+EMP198,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP199,,,,,,,0,False
+EMP200,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP921,1,True
+EMP201,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP202,Chennai,04-11-2025,,Software Engineer,Delivery,EMP397,1,True
+EMP203,Chennai,,,,,,0,False
+EMP204,Chennai,21-01-2026,,Senior Software Engineer,Delivery,EMP271,1,True
+EMP205,Chennai,02-06-2025,,Software Engineer,Delivery,EMP582,1,True
+EMP206,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP1034,1,True
+EMP207,Chennai,13-12-2021,,Senior Software Engineer,Delivery,EMP683,1,True
+EMP208,Chennai,,,,,,0,False
+EMP209,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP210,London,03-09-2012,,Associate Partner,Delivery,EMP483,1,True
+EMP211,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP212,London,01-01-2024,,Non-executive Director,Support,EMP640,1,False
+EMP213,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP214,Chennai,02-06-2025,,Software Engineer,Delivery,EMP200,1,True
+EMP215,Chennai,21-09-2015,,Technology Solutions Architect,Delivery,EMP676,1,True
+EMP216,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP217,Chennai,30-04-2025,,Software Engineer,Delivery,EMP225,1,True
+EMP218,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP403,1,True
+EMP219,London,11-05-2026,,Senior Associate Consultant,Consulting,EMP108,1,False
+EMP220,,,,,Delivery,,0,False
+EMP221,,,,,,,0,False
+EMP222,,,,,,,0,False
+EMP223,,,,,,,0,False
+EMP224,,,,,,,0,False
+EMP225,Chennai,21-04-2025,,Consultant,Delivery,EMP648,1,True
+EMP226,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP227,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP228,,,,,,,0,False
+EMP229,,,,,,,0,False
+EMP230,London,07-08-2023,,Consultant,Delivery,EMP937,1,True
+EMP231,Chennai,01-01-2018,,Principal Technology Architect,Delivery,EMP648,1,True
+EMP232,,,,,,,0,False
+EMP233,New York,01-01-2018,,Technology Solutions Architect,Delivery,EMP903,1,True
+EMP234,Chennai,02-06-2025,,Software Engineer,Delivery,EMP36,1,True
+EMP235,,,,,,,0,False
+EMP236,,,,,,,0,False
+EMP237,Chennai,06-09-2021,,Solutions Consultant,Delivery,EMP425,1,True
+EMP238,,,,,,,0,False
+EMP239,Chennai,01-07-2024,,Solutions Enabler,Delivery,EMP610,1,True
+EMP240,,,,,,,0,False
+EMP241,Chennai,08-04-2026,,Senior Software Engineer,Delivery,EMP244,1,True
+EMP242,Chennai,25-05-2026,,Legal Counsel,Support - Legal,EMP178,1,False
+EMP243,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP6,1,True
+EMP244,Chennai,01-08-2020,,Senior Solutions Consultant,Delivery,EMP231,1,True
+EMP245,Chennai,13-12-2021,,Solutions Consultant,Delivery,EMP398,1,True
+EMP246,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP882,1,True
+EMP247,,,,,,,0,False
+EMP248,London,01-09-2025,29-05-2026,Interim Head of Resourcing,Support,EMP61,1,False
+EMP249,Chennai,13-12-2021,,Solutions Enabler,Delivery,EMP683,1,True
+EMP250,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP251,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP252,Chennai,01-01-2018,,Senior Solutions Consultant,Delivery,EMP398,1,True
+EMP253,London,06-10-2025,,Associate Consultant,Delivery,EMP436,1,True
+EMP254,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP428,1,True
+EMP255,Chennai,,,,,,0,False
+EMP256,Chennai,01-11-2023,,Senior People Operations,HR,EMP301,1,False
+EMP257,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP258,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP259,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP260,London,07-08-2023,,FP&A Business Partner,Support,EMP268,1,False
+EMP261,London,03-11-2025,,Associate Consultant,Delivery,EMP108,1,True
+EMP262,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP263,Chennai,,,,,,0,False
+EMP264,,,,,,,0,False
+EMP265,,,,,,,0,False
+EMP266,Chennai,02-06-2025,,Software Engineer,Delivery,EMP68,1,True
+EMP267,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP20,1,True
+EMP268,London,01-10-2024,,Head of FP&A,Support,EMP61,1,False
+EMP269,,,,,,,0,False
+EMP270,,,,,,,0,False
+EMP271,Chennai,13-12-2021,,Solutions Enabler,Delivery,EMP973,1,True
+EMP272,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP273,London,13-10-2025,,FP&A Manager,Support,EMP268,1,False
+EMP274,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP237,1,True
+EMP275,London,04-10-2021,,Manager,Delivery,EMP907,1,True
+EMP276,London,03-10-2022,,Senior Consultant,Delivery,EMP1031,1,True
+EMP277,Chennai,01-08-2020,,Solutions Consultant,Delivery,EMP215,1,True
+EMP278,,,,,Delivery,,0,False
+EMP279,London,07-04-2025,,Senior Associate Consultant,Delivery,EMP452,1,True
+EMP280,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP281,London,03-02-2025,,Senior Associate Consultant,Delivery,EMP322,1,True
+EMP282,Chennai,17-06-2024,,Senior Software Engineer,Delivery,EMP426,1,True
+EMP283,,,,,,,0,False
+EMP284,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP285,,,,,,,0,False
+EMP286,,,,,,,0,False
+EMP287,London,09-03-2026,,Consultant,Delivery,EMP994,1,True
+EMP288,Chennai,03-04-2023,,Senior Solutions Consultant,Delivery,EMP749,1,True
+EMP289,,,,,,,0,False
+EMP290,,,,,,,0,False
+EMP291,Chennai,,,,,,0,False
+EMP292,,,,,,,0,False
+EMP293,,,,,,,0,False
+EMP294,,,,,,,0,False
+EMP295,,,,,,,0,False
+EMP296,,,,,Delivery,,0,False
+EMP297,,,,,,,0,False
+EMP298,,,,,Delivery,,0,False
+EMP299,,,,,Delivery,,0,False
+EMP300,Chennai,25-05-2026,,Senior Software Engineer,Delivery,EMP603,1,True
+EMP301,Chennai,07-07-2025,,Head of HR & Operations,HR,EMP483,1,False
+EMP302,New York,02-06-2025,,Associate Consultant,Delivery,EMP64,1,True
+EMP303,,,,,Delivery,,0,False
+EMP304,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP305,,,,,,,0,False
+EMP306,New York,06-07-2020,,Manager,Delivery,EMP903,1,True
+EMP307,London,15-04-2026,,Senior Associate Consultant,Delivery,EMP276,1,True
+EMP308,London,15-06-2016,,Associate Partner,Delivery,EMP44,1,True
+EMP309,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP310,,,,,,,0,False
+EMP311,London,02-02-2026,,Resourcing Manager,Support,EMP248,1,False
+EMP312,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP313,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP314,London,28-02-2022,,Senior Consultant,Delivery,EMP22,1,True
+EMP315,,,,,,,0,False
+EMP316,Chennai,05-03-2026,,Senior Software Engineer,Delivery,EMP166,1,True
+EMP317,,,,,,,0,False
+EMP318,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP701,1,True
+EMP319,Chennai,02-06-2025,,Software Engineer,Delivery,EMP925,1,True
+EMP320,New York,06-06-2022,,Manager,Delivery,EMP751,1,True
+EMP321,Chennai,17-06-2024,,Senior Software Engineer,Delivery,EMP36,1,True
+EMP322,London,24-06-2024,,Manager,Delivery,EMP193,1,True
+EMP323,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP438,1,True
+EMP324,,,,,,,0,False
+EMP325,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP277,1,True
+EMP326,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP327,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP68,1,True
+EMP328,Chennai,04-11-2025,,Software Engineer,Delivery,EMP1015,1,True
+EMP329,,,,,,,0,False
+EMP330,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP331,London,04-09-2023,,Senior Associate Consultant,Delivery,EMP452,1,True
+EMP332,,,,,Delivery,,0,False
+EMP333,New York,28-06-2021,,Manager,Delivery,EMP907,1,True
+EMP334,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP335,,,,,,,0,False
+EMP336,,,,,,,0,False
+EMP337,London,07-04-2025,,Consultant,Delivery,EMP62,1,True
+EMP338,,,,,Delivery,,0,False
+EMP339,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP921,1,True
+EMP340,Chennai,,,,,,0,False
+EMP341,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP342,Chennai,02-06-2025,,Software Engineer,Delivery,EMP803,1,True
+EMP343,,,,,,,0,False
+EMP344,,,,,,,0,False
+EMP345,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP346,London,03-10-2022,26-06-2026,Senior Consultant,Delivery,EMP1031,1,False
+EMP347,London,15-04-2026,,Senior Associate Consultant,Delivery,EMP812,1,True
+EMP348,Chennai,01-09-2022,,Solutions Consultant,Delivery,EMP636,1,True
+EMP349,London,07-10-2024,,Consultant,Delivery,EMP314,1,True
+EMP350,Chennai,24-11-2025,,Senior Software Engineer,Delivery,EMP151,1,True
+EMP351,London,01-01-2013,,Leadership,Support,,1,False
+EMP352,London,04-03-2025,,Associate Consultant,Delivery,EMP108,1,True
+EMP353,,,,,,,0,False
+EMP354,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP355,,,,,,,0,False
+EMP356,,,,,Delivery,,0,False
+EMP357,Chennai,04-10-2024,,Principal Technology Architect,Delivery,EMP483,1,True
+EMP358,Chennai,,,,,,0,False
+EMP359,London,09-06-2025,,Principal,Delivery,EMP903,1,True
+EMP360,Chennai,,,,,,0,False
+EMP361,,,,,,,0,False
+EMP362,Chennai,,,,,,0,False
+EMP363,,,,,,,0,False
+EMP364,,,,,,,0,False
+EMP365,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP426,1,True
+EMP366,London,24-07-2023,,Solutions Enabler,Delivery,EMP167,1,True
+EMP367,,,,,,,0,False
+EMP368,,,,,,,0,False
+EMP369,,,,,,,0,False
+EMP370,London,22-07-2024,11-06-2026,Manager,Delivery,EMP732,1,False
+EMP371,New York,07-07-2025,,Associate Consultant,Delivery,EMP320,1,True
+EMP372,London,05-01-2026,,Associate Consultant,Delivery,EMP847,1,True
+EMP373,Chennai,06-04-2026,,Solutions Enabler,Delivery,EMP68,1,True
+EMP374,Chennai,,,,,,0,False
+EMP375,,,,,,,0,False
+EMP376,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP959,1,True
+EMP377,Chennai,04-11-2025,,Software Engineer,Delivery,EMP468,1,True
+EMP378,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP379,Chennai,,,,,,0,False
+EMP380,London,07-07-2025,,Senior Associate Consultant,Delivery,EMP847,1,True
+EMP381,,,,,,,0,False
+EMP382,London,05-01-2026,,Associate Consultant,Delivery,EMP349,1,True
+EMP383,,,,,,,0,False
+EMP384,Chennai,21-05-2026,,Finance Executive,Support,EMP544,1,False
+EMP385,,,,,,,0,False
+EMP386,Chennai,04-05-2026,,Solutions Enabler,Delivery,EMP781,1,True
+EMP387,Chennai,17-06-2024,,Senior Software Engineer,Delivery,EMP20,1,True
+EMP388,London,06-10-2025,,Associate Consultant,Delivery,EMP615,1,True
+EMP389,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP390,Chennai,01-02-2023,,Solutions Enabler,Delivery,EMP443,1,True
+EMP391,Chennai,02-06-2025,,Software Engineer,Delivery,EMP803,1,True
+EMP392,,,,,Delivery,,0,False
+EMP393,London,01-09-2022,,Senior Solutions Consultant,Delivery,EMP193,1,True
+EMP394,London,03-11-2025,,Associate Consultant,Delivery,EMP658,1,True
+EMP395,Chennai,01-11-2023,,Administration,HR,EMP629,1,False
+EMP396,,,,,People Team,,0,False
+EMP397,Chennai,17-06-2024,,Solutions Enabler,Delivery,EMP68,1,True
+EMP398,London,01-11-2012,,Principal Technology Architect,Delivery,EMP357,1,True
+EMP399,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP348,1,True
+EMP400,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP959,1,True
+EMP401,London,07-04-2026,,Senior Associate Consultant,Delivery,EMP811,1,True
+EMP402,,,,,,,0,False
+EMP403,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP490,1,True
+EMP404,Chennai,01-03-2019,,Solutions Enabler,Delivery,EMP288,1,True
+EMP405,,,,,,,0,False
+EMP406,London,05-05-2026,,Associate Consultant,Consulting,EMP902,1,False
+EMP407,,,,,,,0,False
+EMP408,,,,,,,0,False
+EMP409,Chennai,10-02-2025,,Associate HRBP,HR,EMP462,1,False
+EMP410,,,,,,,0,False
+EMP411,Chennai,27-10-2025,,Software Engineer,Delivery,EMP1015,1,True
+EMP412,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP252,1,True
+EMP413,,,,,,,0,False
+EMP414,Chennai,01-07-2025,,IT Support Engineer,IT Support,EMP526,1,False
+EMP415,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP416,New York,18-02-2025,,People and Internal Communications Associate,Support,EMP46,1,False
+EMP417,London,27-01-2025,,Head of Financial Control,Support,EMP61,1,False
+EMP418,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP271,1,True
+EMP419,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP420,,,,,,,0,False
+EMP421,New York,12-01-2026,30-06-2026, Internal Comms Project Manager,Delivery,EMP61,1,False
+EMP422,,,,,,,0,False
+EMP423,,,,,,,0,False
+EMP424,London,03-11-2025,,Associate Consultant,Delivery,EMP230,1,True
+EMP425,Chennai,01-04-2017,,Technical Solutions Architect,Delivery,EMP973,1,True
+EMP426,London,01-06-2021,,Solutions Consultant,Delivery,EMP636,1,True
+EMP427,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP428,Chennai,06-09-2021,,Solutions Consultant,Delivery,EMP762,1,True
+EMP429,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP430,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP431,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP432,,,,,,,0,False
+EMP433,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP950,1,True
+EMP434,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP435,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP436,London,15-03-2021,,Manager,Delivery,EMP1031,1,True
+EMP437,Chennai,,,,,,0,False
+EMP438,Chennai,01-07-2020,,Senior Solutions Consultant,Delivery,EMP762,1,True
+EMP439,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP102,1,True
+EMP440,,,,,,,0,False
+EMP441,London,20-10-2025,,Leadership,Support,EMP351,1,False
+EMP442,Chennai,01-02-2023,,Solutions Enabler,Delivery,EMP277,1,True
+EMP443,Chennai,21-02-2022,,Solutions Consultant,Delivery,EMP398,1,True
+EMP444,Chennai,02-06-2025,,Software Engineer,Delivery,EMP79,1,True
+EMP445,Chennai,01-07-2020,,Solutions Consultant,Delivery,EMP425,1,True
+EMP446,,,,,,,0,False
+EMP447,Chennai,20-01-2025,,HR Administrator,HR,EMP462,1,False
+EMP448,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP449,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP450,,,,,,,0,False
+EMP451,Chennai,01-07-2024,,Solutions Enabler,Delivery,EMP36,1,True
+EMP452,London,18-10-2021,,Manager,Delivery,EMP308,1,True
+EMP453,,,,,,,0,False
+EMP454,,,,,,,0,False
+EMP455,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP456,Chennai,01-07-2024,,Solutions Enabler,Delivery,EMP1026,1,True
+EMP457,Chennai,03-06-2024,,Solutions Enabler,Delivery,EMP1026,1,True
+EMP458,Chennai,,,,,,0,False
+EMP459,,,,,,,0,False
+EMP460,,,,,,,0,False
+EMP461,Chennai,04-05-2026,,Senior HR Leader Consultant,,EMP483,1,False
+EMP462,Chennai,17-07-2023,,People Lead,HR,EMP301,1,False
+EMP463,Chennai,09-06-2025,,Software Engineer,Delivery,EMP189,1,True
+EMP464,,,,,,,0,False
+EMP465,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP466,Chennai,04-11-2025,,Software Engineer,Delivery,EMP225,1,True
+EMP467,,,,,,,0,False
+EMP468,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP36,1,True
+EMP469,,,,,,,0,False
+EMP470,Chennai,04-11-2025,,Software Engineer,Delivery,EMP321,1,True
+EMP471,,,,,Delivery,,0,False
+EMP472,London,02-06-2025,,Consultant,Delivery,EMP596,1,True
+EMP473,,,,,,,0,False
+EMP474,,,,,,,0,False
+EMP475,,,,,,,0,False
+EMP476,Chennai,24-07-2023,,Solutions Consultant,Delivery,EMP428,1,True
+EMP477,Chennai,02-06-2025,,Software Engineer,Delivery,EMP603,1,True
+EMP478,,,,,Delivery,,0,False
+EMP479,New York,20-02-2023,,Senior Consultant,Delivery,EMP1031,1,True
+EMP480,London,02-09-2024,,Senior Associate Consultant,Delivery,EMP314,1,True
+EMP481,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP482,,,,,,,0,False
+EMP483,Chennai,01-04-2017,,Leadership,Delivery,EMP351,1,True
+EMP484,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP485,Chennai,02-06-2025,,Software Engineer,Delivery,EMP1034,1,True
+EMP486,,,,,,,0,False
+EMP487,,,,,Delivery,,0,False
+EMP488,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP98,1,True
+EMP489,,,,,,,0,False
+EMP490,Chennai,13-12-2021,,Solutions Consultant,Delivery,EMP492,1,True
+EMP491,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP567,1,True
+EMP492,Chennai,05-11-2012,,Senior Solutions Consultant,Delivery,EMP667,1,True
+EMP493,,,,,,,0,False
+EMP494,,,,,,,0,False
+EMP495,,,,,,,0,False
+EMP496,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP497,,,,,Delivery,,0,False
+EMP498,Chennai,03-06-2024,,Solutions Enabler,Delivery,EMP529,1,True
+EMP499,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP538,1,True
+EMP500,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP501,Chennai,02-06-2025,,Software Engineer,Delivery,EMP91,1,True
+EMP502,Chennai,02-06-2025,,Senior Software Engineer,Delivery,EMP68,1,True
+EMP503,London,05-05-2026,,Senior Associate Consultant,Consulting,EMP230,1,False
+EMP504,London,04-08-2025,,Associate Consultant,Delivery,EMP847,1,True
+EMP505,London,05-01-2026,,Associate Consultant,HR,EMP902,1,False
+EMP506,,,,,,,0,False
+EMP507,Chennai,21-10-2024,,Senior Finance Executive,Finance,EMP544,1,False
+EMP508,Chennai,02-06-2025,,Senior Software Engineer,Delivery,EMP254,1,True
+EMP509,London,09-03-2026,,HRBP,,EMP46,1,False
+EMP510,,,,,,,0,False
+EMP511,Chennai,04-11-2025,,Software Engineer,Delivery,EMP950,1,True
+EMP512,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP443,1,True
+EMP513,Chennai,02-06-2025,,Software Engineer,Delivery,EMP891,1,True
+EMP514,Chennai,22-12-2025,,TA Coordinator,HR,EMP981,1,False
+EMP515,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP516,Chennai,01-07-2020,,Solutions Enabler,Delivery,EMP98,1,True
+EMP517,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP518,,,,,,,0,False
+EMP519,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP848,1,True
+EMP520,,,,,,,0,False
+EMP521,,,,,,,0,False
+EMP522,,,,,,,0,False
+EMP523,,,,,,,0,False
+EMP524,,,,,,,0,False
+EMP525,,,,,,,0,False
+EMP526,Chennai,09-09-2024,,IT Infrastructure Enabler,IT Support,EMP667,1,False
+EMP527,Chennai,,,,,,0,False
+EMP528,Chennai,17-06-2024,,Solutions Enabler,Delivery,EMP848,1,True
+EMP529,Chennai,13-12-2021,,Solutions Consultant,Delivery,EMP231,1,True
+EMP530,,,,,,,0,False
+EMP531,Chennai,06-09-2021,,Solutions Enabler,Delivery,EMP151,1,True
+EMP532,Chennai,,,,,,0,False
+EMP533,London,09-07-2015,,Associate Partner,Delivery,EMP44,1,True
+EMP534,London,05-05-2026,,Associate Consultant,Delivery,EMP809,1,True
+EMP535,New York,01-09-2016,,Technology Solutions Architect,Delivery,EMP751,1,True
+EMP536,,,,,,,0,False
+EMP537,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP538,Chennai,24-07-2023,,Solutions Consultant,Delivery,EMP791,1,True
+EMP539,,,,,,,0,False
+EMP540,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP541,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP237,1,True
+EMP542,,,,,,,0,False
+EMP543,,,,,,,0,False
+EMP544,Chennai,03-03-2025,,Finance Controller,Finance,EMP417,1,False
+EMP545,Chennai,,,,,,0,False
+EMP546,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP538,1,True
+EMP547,Chennai,21-07-2025,,Solutions Enabler,Delivery,EMP781,1,True
+EMP548,Chennai,02-06-2025,,Software Engineer,Delivery,EMP133,1,True
+EMP549,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP550,Chennai,01-10-2016,,Solutions Consultant,Delivery,EMP398,1,True
+EMP551,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP166,1,True
+EMP552,,,,,,,0,False
+EMP553,,,,,,,0,False
+EMP554,,,,,,,0,False
+EMP555,Chennai,10-02-2026,,Senior Software Engineer,Delivery,EMP237,1,True
+EMP556,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP516,1,True
+EMP557,New York,29-07-2019,,Manager,Delivery,EMP751,1,True
+EMP558,,,,,,,0,False
+EMP559,Chennai,06-09-2021,,Solutions Consultant,Delivery,EMP762,1,True
+EMP560,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP561,Chennai,21-05-2026,,Associate Consultant,,EMP529,1,False
+EMP562,Chennai,02-06-2025,,Software Engineer,Delivery,EMP529,1,True
+EMP563,London,16-02-2026,29-05-2026,Consultant,Delivery,EMP436,1,False
+EMP564,,,,,,,0,False
+EMP565,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP566,London,19-01-2026,,Senior Associate Consultant,Delivery,EMP890,1,True
+EMP567,Chennai,16-03-2022,,Solutions Consultant,Delivery,EMP161,1,True
+EMP568,,,,,Delivery,,0,False
+EMP569,Chennai,01-03-2019,,Solutions Consultant,Delivery,EMP398,1,True
+EMP570,Chennai,16-02-2026,,Software Engineer,Delivery,EMP90,1,True
+EMP571,London,18-09-2023,31-05-2026,Manager,Delivery,EMP533,1,False
+EMP572,,,,,,,0,False
+EMP573,,,,,,,0,False
+EMP574,,,,,,,0,False
+EMP575,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP576,,,,,,,0,False
+EMP577,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP578,,,,,,,0,False
+EMP579,,,,,,,0,False
+EMP580,London,04-08-2025,,Associate Consultant,Delivery,EMP811,1,True
+EMP581,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP904,1,True
+EMP582,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP68,1,True
+EMP583,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP584,,,,,,,0,False
+EMP585,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP586,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP587,,,,,,,0,False
+EMP588,,,,,,,0,False
+EMP589,London,05-05-2026,,Consultant,Billable ,EMP62,1,False
+EMP590,Chennai,,,,,,0,False
+EMP591,,,,,,,0,False
+EMP592,,,,,,,0,False
+EMP593,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP959,1,True
+EMP594,Chennai,03-06-2024,,Solutions Enabler,Delivery,EMP882,1,True
+EMP595,Chennai,02-06-2025,,Software Engineer,Delivery,EMP476,1,True
+EMP596,London,11-01-2021,,Manager,Delivery,EMP903,1,True
+EMP597,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP598,London,03-02-2025,,Head of Talent,Support,EMP351,1,False
+EMP599,,,,,,,0,False
+EMP600,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP601,London,20-02-2023,,Senior Consultant,Delivery,EMP275,1,True
+EMP602,,,,,,,0,False
+EMP603,Chennai,01-03-2019,,Solutions Enabler,Delivery,EMP215,1,True
+EMP604,,,,,Delivery,,0,False
+EMP605,Chennai,,,,,,0,False
+EMP606,Chennai,20-11-2023,,Solutions Enabler,Delivery,EMP98,1,True
+EMP607,Chennai,02-06-2025,,Software Engineer,Delivery,EMP245,1,True
+EMP608,,,,,,,0,False
+EMP609,London,20-11-2023,,Senior Consultant,Delivery,EMP210,1,True
+EMP610,Chennai,24-07-2023,,Solutions Consultant,Delivery,EMP492,1,True
+EMP611,Chennai,02-06-2025,,Senior Software Engineer,Delivery,EMP397,1,True
+EMP612,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP194,1,True
+EMP613,,,,,,,0,False
+EMP614,Chennai,03-06-2024,,Solutions Enabler,Delivery,EMP98,1,True
+EMP615,London,12-09-2022,,Senior Consultant,Delivery,EMP308,1,True
+EMP616,,,,,,,0,False
+EMP617,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP618,Chennai,28-01-2026,,Solutions Enabler,Delivery,EMP567,1,True
+EMP619,,,,,,,0,False
+EMP620,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP621,,,,,,,0,False
+EMP622,Chennai,02-06-2025,,Software Engineer,Delivery,EMP102,1,True
+EMP623,Chennai,17-06-2024,,Solutions Enabler,Delivery,EMP1020,1,True
+EMP624,Chennai,13-12-2021,,Senior Software Engineer,Delivery,EMP102,1,True
+EMP625,,,,,,,0,False
+EMP626,,,,,,,0,False
+EMP627,London,26-01-2026,,HRBP,,EMP46,1,False
+EMP628,,,,,,,0,False
+EMP629,Chennai,19-01-2026,,Admin Manager,HR,EMP301,1,False
+EMP630,London,05-01-2026,,Associate Consultant,Delivery,EMP197,1,True
+EMP631,,,,,,,0,False
+EMP632,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP633,,,,,,,0,False
+EMP634,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP425,1,True
+EMP635,London,07-07-2025,,Senior Associate Consultant,Delivery,EMP890,1,True
+EMP636,Chennai,01-09-2016,,Technology Solutions Architect,Delivery,EMP648,1,True
+EMP637,,,,,,,0,False
+EMP638,,,,,,,0,False
+EMP639,Chennai,02-06-2025,,Software Engineer,Delivery,EMP701,1,True
+EMP640,London,01-08-2023,,Leadership,,EMP351,1,False
+EMP641,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP642,,,,,,,0,False
+EMP643,,,,,,,0,False
+EMP644,,,,,,,0,False
+EMP645,,,,,Delivery,,0,False
+EMP646,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP348,1,True
+EMP647,London,24-11-2025,,IT Manager,IT Support,EMP1042,1,False
+EMP648,Chennai,19-02-2025,,Principal Technology Architect,Delivery,EMP483,1,True
+EMP649,,,,,Delivery,,0,False
+EMP650,Chennai,03-12-2025,,Senior Software Engineer,Delivery,EMP943,1,True
+EMP651,Chennai,02-06-2025,,Software Engineer,Delivery,EMP882,1,True
+EMP652,,,,,,,0,False
+EMP653,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP277,1,True
+EMP654,Chennai,13-12-2021,,Solutions Consultant,Delivery,EMP882,1,True
+EMP655,London,16-09-2024,10-06-2026,Senior Consultant,Delivery,EMP533,1,False
+EMP656,,,,,Delivery,,0,False
+EMP657,London,22-04-2025,,Senior Associate Consultant,,EMP596,1,False
+EMP658,London,26-09-2022,,Consultant,Delivery,EMP275,1,True
+EMP659,Chennai,21-01-2026,,Senior TA Coordinator,HR,EMP928,1,False
+EMP660,Chennai,13-12-2021,,Solutions Enabler,Delivery,EMP244,1,True
+EMP661,New York,10-08-2020,,Principal,Delivery,EMP533,1,True
+EMP662,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP610,1,True
+EMP663,Chennai,02-06-2025,,Software Engineer,Delivery,EMP952,1,True
+EMP664,,,,,,,0,False
+EMP665,New York,26-08-2024,,Senior Associate Consultant,Delivery,EMP903,1,True
+EMP666,,,,,,,0,False
+EMP667,Chennai,02-05-2024,,Principal Technology Architect,Delivery,EMP483,1,True
+EMP668,,,,,,,0,False
+EMP669,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP670,Chennai,02-06-2025,,Software Engineer,Delivery,EMP443,1,True
+EMP671,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP672,,,,,,,0,False
+EMP673,Chennai,01-06-2021,,Solutions Enabler,Delivery,EMP569,1,True
+EMP674,,,,,,,0,False
+EMP675,Chennai,13-12-2021,,Senior Solutions Consultant,Delivery,EMP161,1,True
+EMP676,Chennai,05-04-2017,,Principal Technology Architect,Delivery,EMP483,1,True
+EMP677,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP662,1,True
+EMP678,London,07-10-2024,,Senior Associate Consultant,Delivery,EMP596,1,True
+EMP679,London,04-11-2024,12-07-2026,Consultant,Delivery,EMP688,1,False
+EMP680,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP681,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP682,,,,,,,0,False
+EMP683,Chennai,01-07-2020,,Solutions Consultant,Delivery,EMP791,1,True
+EMP684,New York,27-01-2020,,Principal,Delivery,EMP903,1,True
+EMP685,,,,,,,0,False
+EMP686,New York,28-07-2025,,Associate Consultant,Delivery,EMP1021,1,True
+EMP687,,,,,,,0,False
+EMP688,London,08-08-2022,,Manager,Delivery,EMP22,1,True
+EMP689,London,06-10-2025,,Consultant,Delivery,EMP615,1,True
+EMP690,Chennai,01-06-2021,,Senior Software Engineer,Delivery,EMP662,1,True
+EMP691,,,,,,,0,False
+EMP692,London,05-01-2026,,Principal,Delivery,EMP308,1,True
+EMP693,London,02-03-2026,,Associate Consultant,Delivery,EMP230,1,True
+EMP694,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP695,Chennai,,,,,,0,False
+EMP696,,,,,,,0,False
+EMP697,,,,,,,0,False
+EMP698,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP225,1,True
+EMP699,,,,,,,0,False
+EMP700,Chennai,,,,,,0,False
+EMP701,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP636,1,True
+EMP702,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP1000,1,True
+EMP703,,,,,,,0,False
+EMP704,London,16-09-2025,,Associate Partner,Delivery,EMP351,1,True
+EMP705,,,,,,,0,False
+EMP706,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP707,New York,27-04-2026,,Associate Consultant,Delivery,EMP716,1,True
+EMP708,New York,02-09-2025,,Associate Consultant,Delivery,EMP333,1,True
+EMP709,,,,,,,0,False
+EMP710,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP194,1,True
+EMP711,London,05-01-2026,,Senior Associate Consultant,Delivery,EMP609,1,True
+EMP712,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP713,,,,,,,0,False
+EMP714,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP239,1,True
+EMP715,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP716,New York,08-08-2024,,Consultant,Delivery,EMP557,1,True
+EMP717,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP718,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP719,,,,,,,0,False
+EMP720,,,,,,,0,False
+EMP721,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP559,1,True
+EMP722,Chennai,02-06-2025,,Software Engineer,Delivery,EMP807,1,True
+EMP723,Chennai,,,,,,0,False
+EMP724,,,,,,,0,False
+EMP725,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP1000,1,True
+EMP726,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP727,London,19-05-2025,,EA and Team Assistant,Support,EMP1042,1,False
+EMP728,,,,,Delivery,,0,False
+EMP729,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP167,1,True
+EMP730,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP731,,,,,,,0,False
+EMP732,London,18-09-2023,,Associate Partner,Delivery,EMP44,1,True
+EMP733,,,,,,,0,False
+EMP734,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP735,,,,,,,0,False
+EMP736,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP1000,1,True
+EMP737,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP654,1,True
+EMP738,Chennai,02-06-2025,,Software Engineer,Delivery,EMP528,1,True
+EMP739,Chennai,,,,,,0,False
+EMP740,,,,,,,0,False
+EMP741,,,,,Delivery,,0,False
+EMP742,London,07-04-2026,,Senior Associate Consultant,Delivery,EMP688,1,True
+EMP743,Chennai,,,,,,0,False
+EMP744,Chennai,03-06-2024,,Senior Software Engineer,Delivery,EMP581,1,True
+EMP745,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP746,,,,,,,0,False
+EMP747,,,,,Delivery,,0,False
+EMP748,London,02-02-2026,,Senior Associate Consultant,Delivery,EMP601,1,True
+EMP749,Chennai,01-06-2016,,Technology Solutions Architect,Delivery,EMP667,1,True
+EMP750,Chennai,01-10-2012,,Solutions Consultant,Delivery,EMP492,1,True
+EMP751,New York,07-07-2025,,Associate Partner,Delivery,EMP44,1,True
+EMP752,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP753,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP5,1,True
+EMP754,London,03-01-2023,,Manager,Delivery,EMP1036,1,True
+EMP755,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP20,1,True
+EMP756,,,,,,,0,False
+EMP757,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP758,,,,,,,0,False
+EMP759,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP5,1,True
+EMP760,London,,,,,,0,False
+EMP761,Chennai,06-09-2021,,Senior Software Engineer,Delivery,EMP750,1,True
+EMP762,Chennai,09-06-2021,,Senior Solutions Consultant,Delivery,EMP47,1,True
+EMP763,,,,,,,0,False
+EMP764,Chennai,17-06-2024,,Senior Software Engineer,Delivery,EMP781,1,True
+EMP765,Chennai,02-06-2025,,Software Engineer,Delivery,EMP569,1,True
+EMP766,,,,,,,0,False
+EMP767,London,04-11-2024,,People Partner,Support,EMP46,1,False
+EMP768,,,,,,,0,False
+EMP769,Chennai,23-03-2026,,Software Engineer,Delivery,EMP826,1,True
+EMP770,,,,,,,0,False
+EMP771,Chennai,06-09-2021,,Senior Solutions Consultant,Delivery,EMP425,1,True
+EMP772,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP773,,,,,,,0,False
+EMP774,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP277,1,True
+EMP775,Chennai,04-11-2025,,Software Engineer,Delivery,EMP468,1,True
+EMP776,Chennai,,,,,,0,False
+EMP777,London,02-03-2026,,Associate Consultant,Delivery,EMP804,1,True
+EMP778,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP779,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP780,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP781,Chennai,01-07-2020,,Senior Solutions Consultant,Delivery,EMP762,1,True
+EMP782,Chennai,01-02-2023,,Senior Software Engineer,Delivery,EMP569,1,True
+EMP783,Chennai,02-06-2025,,Software Engineer,Delivery,EMP451,1,True
+EMP784,,,,,,,0,False
+EMP785,London,01-09-2025,,Associate Consultant,Delivery,EMP62,1,True
+EMP786,Chennai,14-11-2023,,Senior Finance Executive,Finance,EMP544,1,False
+EMP787,London,19-01-2026,,Principal,Delivery,EMP732,1,True
+EMP788,,,,,,,0,False
+EMP789,Chennai,01-12-2025,,IT Support Engineer,IT Support,EMP526,1,False
+EMP790,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP791,Chennai,01-01-2018,,Senior Solutions Consultant,Delivery,EMP973,1,True
+EMP792,,,,,,,0,False
+EMP793,Chennai,04-07-2022,,Finance Officer,Finance,EMP544,1,False
+EMP794,,,,,,,0,False
+EMP795,,,,,,,0,False
+EMP796,London,07-04-2026,,Associate Consultant,Delivery,EMP56,1,True
+EMP797,,,,,,,0,False
+EMP798,,,,,Delivery,,0,False
+EMP799,London,11-08-2025,,Associate Consultant,Delivery,EMP337,1,True
+EMP800,,,,,,,0,False
+EMP801,,,,,,,0,False
+EMP802,Chennai,08-12-2025,,Senior Software Engineer,Delivery,EMP194,1,True
+EMP803,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP194,1,True
+EMP804,London,14-11-2022,,Consultant,Delivery,EMP276,1,True
+EMP805,New York,04-11-2024,,Senior Associate Consultant,Delivery,EMP661,1,True
+EMP806,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP239,1,True
+EMP807,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP425,1,True
+EMP808,,,,,,,0,False
+EMP809,London,03-01-2023,,Senior Consultant,Delivery,EMP1036,1,True
+EMP810,,,,,,,0,False
+EMP811,London,20-02-2023,,Senior Consultant,Delivery,EMP22,1,True
+EMP812,London,29-11-2021,,Senior Consultant,Delivery,EMP732,1,True
+EMP813,,,,,Delivery,,0,False
+EMP814,,,,,,,0,False
+EMP815,Chennai,07-07-2025,,Leadership,Delivery,EMP483,1,True
+EMP816,Chennai,16-02-2026,,Principal Architect,Delivery,EMP483,1,True
+EMP817,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP348,1,True
+EMP818,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP819,,,,,,,0,False
+EMP820,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP821,,,,,,,0,False
+EMP822,Chennai,08-05-2026,,Associate HRBP,Support,EMP462,1,False
+EMP823,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP185,1,True
+EMP824,Chennai,,,,,,0,False
+EMP825,Chennai,,,,,,0,False
+EMP826,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP675,1,True
+EMP827,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP828,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP829,Chennai,,,,,,0,False
+EMP830,,,,,,,0,False
+EMP831,Chennai,13-10-2025,,Solutions Enabler,Delivery,EMP567,1,True
+EMP832,London,02-03-2026,,Associate Consultant,Delivery,EMP197,1,True
+EMP833,,,,,,,0,False
+EMP834,London,15-04-2026,,Associate Consultant,Delivery,EMP812,1,True
+EMP835,,,,,,,0,False
+EMP836,,,,,Delivery,,0,False
+EMP837,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP838,Chennai,09-02-2026,,Finance Specialist,Finance,EMP544,1,False
+EMP839,,,,,,,0,False
+EMP840,,,,,Delivery,,0,False
+EMP841,Chennai,02-06-2025,,Software Engineer,Delivery,EMP439,1,True
+EMP842,London,09-03-2026,,Senior Consultant,Delivery,EMP22,1,True
+EMP843,Chennai,,,,,,0,False
+EMP844,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP57,1,True
+EMP845,Chennai,,,,,,0,False
+EMP846,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP847,London,20-06-2022,,Senior Consultant,Delivery,EMP688,1,True
+EMP848,Chennai,01-03-2019,,Solutions Consultant,Delivery,EMP166,1,True
+EMP849,London,15-04-2026,,Principal,Delivery,EMP907,1,True
+EMP850,,,,,,,0,False
+EMP851,Chennai,13-05-2026,13-05-2027,Associate Finance Controller,Support,EMP544,1,False
+EMP852,London,15-04-2026,,Consultant,Delivery,EMP596,1,True
+EMP853,Chennai,02-06-2025,,Software Engineer,Delivery,EMP943,1,True
+EMP854,,,,,,,0,False
+EMP855,,,,,,,0,False
+EMP856,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP857,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP858,London,09-03-2026,,Associate Consultant,Delivery,EMP658,1,True
+EMP859,,,,,Delivery,,0,False
+EMP860,,,,,,,0,False
+EMP861,Chennai,17-06-2024,,Solutions Enabler,Delivery,EMP675,1,True
+EMP862,,,,,,,0,False
+EMP863,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP1026,1,True
+EMP864,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP865,,,,,Delivery,,0,False
+EMP866,London,02-03-2026,,Associate Consultant,Delivery,EMP812,1,True
+EMP867,,,,,Delivery,,0,False
+EMP868,,,,,,,0,False
+EMP869,London,02-03-2026,,Senior Legal Counsel & Head of Privacy,Legal,EMP441,1,False
+EMP870,Chennai,17-06-2024,,Senior Software Engineer,Delivery,EMP848,1,True
+EMP871,London,19-08-2024,,Senior Associate Consultant,Delivery,EMP937,1,True
+EMP872,Chennai,02-06-2025,,Software Engineer,Delivery,EMP516,1,True
+EMP873,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP874,London,16-09-2024,,Senior Associate Consultant,Delivery,EMP609,1,True
+EMP875,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP876,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP877,Chennai,04-11-2025,,Software Engineer,Delivery,EMP206,1,True
+EMP878,,,,,,,0,False
+EMP879,Chennai,02-06-2025,,Software Engineer,Delivery,EMP5,1,True
+EMP880,,,,,,,0,False
+EMP881,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP882,Chennai,01-07-2020,,Senior Solutions Consultant,Delivery,EMP215,1,True
+EMP883,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP884,,,,,Delivery,,0,False
+EMP885,New York,18-05-2026,,,US Non-Billable (Back Office),EMP186,1,False
+EMP886,,,,,,,0,False
+EMP887,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP888,New York,06-04-2026,,Associate Consultant,Delivery,EMP152,1,True
+EMP889,,,,,,,0,False
+EMP890,London,16-10-2023,,Senior Consultant,Delivery,EMP994,1,True
+EMP891,Chennai,01-07-2024,,Solutions Enabler,Delivery,EMP5,1,True
+EMP892,,,,,,,0,False
+EMP893,Chennai,02-06-2025,,Software Engineer,Delivery,EMP366,1,True
+EMP894,New York,11-11-2024,,Associate Consultant,Delivery,EMP320,1,True
+EMP895,London,08-12-2025,,Talent Acquisition Partner,HR,EMP598,1,False
+EMP896,London,05-01-2026,,Interim Group Financial Controller,Finance,EMP417,1,False
+EMP897,,,,,Delivery,,0,False
+EMP898,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP899,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP490,1,True
+EMP900,London,06-09-2021,,Consultant,Delivery,EMP557,1,True
+EMP901,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP902,London,07-07-2025,,Consultant,Delivery,EMP754,1,True
+EMP903,New York,06-11-2017,,Associate Partner,Delivery,EMP351,1,True
+EMP904,Chennai,13-12-2021,,Solutions Consultant,Delivery,EMP492,1,True
+EMP905,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP426,1,True
+EMP906,London,24-11-2025,,Senior Associate Consultant,Delivery,EMP812,1,True
+EMP907,New York,01-10-2024,,Associate Partner,Delivery,EMP44,1,True
+EMP908,,,,,,,0,False
+EMP909,,,,,Delivery,EMP751,0,False
+EMP910,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP911,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP912,,,,,,,0,False
+EMP913,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP914,Chennai,04-11-2025,,Software Engineer,Delivery,EMP225,1,True
+EMP915,,,,,,,0,False
+EMP916,Chennai,21-04-2026,,Senior Software Engineer,Delivery,EMP245,1,True
+EMP917,Chennai,04-11-2025,,Software Engineer,Delivery,EMP1015,1,True
+EMP918,Chennai,,,,,,0,False
+EMP919,London,02-02-2026,31-07-2026,Associate Consultant,Delivery,EMP27,1,False
+EMP920,London,08-09-2025,,Senior Associate Consultant,Delivery,EMP314,1,True
+EMP921,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP904,1,True
+EMP922,Chennai,21-04-2025,,Resourcing Manager,HR,EMP248,1,False
+EMP923,Chennai,23-01-2026,,Senior Software Engineer,Delivery,EMP20,1,True
+EMP924,Chennai,,,Senior Software Engineer,,,0,False
+EMP925,Chennai,03-06-2024,,Senior Software Engineer,Delivery,EMP567,1,True
+EMP926,,,,,,,0,False
+EMP927,,,,,,,0,False
+EMP928,Chennai,12-05-2025,,Talent Acquisition Partner,HR,EMP301,1,False
+EMP929,Chennai,,,,,,0,False
+EMP930,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP931,,,,,,,0,False
+EMP932,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP443,1,True
+EMP933,Chennai,01-07-2024,,Solutions Enabler,Delivery,EMP438,1,True
+EMP934,,,,,,,0,False
+EMP935,,,,,,,0,False
+EMP936,,,,,,,0,False
+EMP937,London,08-03-2021,,Manager,Delivery,EMP193,1,True
+EMP938,,,,,,,0,False
+EMP939,,,,,,,0,False
+EMP940,Chennai,02-06-2025,,Software Engineer,Delivery,EMP91,1,True
+EMP941,Chennai,27-04-2026,,Solutions Enabler,Delivery,EMP959,1,True
+EMP942,,,,,,,0,False
+EMP943,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP161,1,True
+EMP944,Chennai,02-06-2025,,Software Engineer,Delivery,EMP606,1,True
+EMP945,London,,,,Delivery,,0,False
+EMP946,,,,,,,0,False
+EMP947,,,,Intern,,,0,False
+EMP948,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP443,1,True
+EMP949,London,01-11-2023,,Finance Assistant,Support,EMP417,1,False
+EMP950,Chennai,05-06-2023,,Solutions Enabler,Delivery,EMP244,1,True
+EMP951,London,04-03-2025,,Office Manager,Support,EMP1042,1,False
+EMP952,Chennai,13-12-2021,,Solutions Consultant,Delivery,EMP288,1,True
+EMP953,,,,,,,0,False
+EMP954,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP955,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP956,Chennai,02-06-2025,,Software Engineer,Delivery,EMP1020,1,True
+EMP957,,,,,Delivery,,0,False
+EMP958,Chennai,,,,,,0,False
+EMP959,Chennai,13-12-2021,,Solutions Consultant,Delivery,EMP791,1,True
+EMP960,Chennai,02-06-2025,,Software Engineer,Delivery,EMP271,1,True
+EMP961,,,,,,,0,False
+EMP962,London,02-06-2025,,Senior Associate Consultant,Delivery,EMP276,1,True
+EMP963,,,,,,,0,False
+EMP964,,,,,,,0,False
+EMP965,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP249,1,True
+EMP966,Chennai,,,,,,0,False
+EMP967,Chennai,02-06-2025,,Software Engineer,Delivery,EMP950,1,True
+EMP968,,,,,,,0,False
+EMP969,,,,,Finance,,0,False
+EMP970,,,,,,,0,False
+EMP971,,,,,,,0,False
+EMP972,London,16-09-2025,,Senior Associate Consultant,Delivery,EMP754,1,True
+EMP973,Chennai,14-11-2013,,Principal Technology Architect,Delivery,EMP47,1,True
+EMP974,New York,06-02-2023,,Senior Consultant,Delivery,EMP320,1,True
+EMP975,Chennai,17-06-2024,,Senior Software Engineer,Delivery,EMP151,1,True
+EMP976,,,,,,,0,False
+EMP977,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP978,Chennai,24-07-2023,,Senior Software Engineer,Delivery,EMP185,1,True
+EMP979,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP980,Chennai,,,,,,0,False
+EMP981,Chennai,25-09-2023,,Talent Acquisition,HR,EMP301,1,False
+EMP982,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP983,Chennai,,,,,,0,False
+EMP984,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP985,,,,,,,0,False
+EMP986,Chennai,07-02-2022,,Senior Software Engineer,Delivery,EMP166,1,True
+EMP987,,,,,,,0,False
+EMP988,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP989,,,,,,,0,False
+EMP990,,,,,,,0,False
+EMP991,Chennai,09-06-2025,,Software Engineer,Delivery,EMP252,1,True
+EMP992,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP882,1,True
+EMP993,,,,,,,0,False
+EMP994,London,02-10-2023,,Principal,Delivery,EMP44,1,True
+EMP995,,,,,,,0,False
+EMP996,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP428,1,True
+EMP997,London,06-05-2025,,Consultant,Delivery,EMP275,1,True
+EMP998,Chennai,28-04-2026,,Software Engineer,Delivery,EMP438,1,True
+EMP999,,,,,,,0,False
+EMP1000,Chennai,01-09-2022,,Solutions Consultant,Delivery,EMP398,1,True
+EMP1001,Chennai,22-07-2024,,Software Engineer,Delivery,EMP252,1,True
+EMP1002,,,,,,,0,False
+EMP1003,Chennai,28-01-2026,,Consultant,Delivery,EMP816,1,True
+EMP1004,,,,,,,0,False
+EMP1005,,,,,,,0,False
+EMP1006,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP559,1,True
+EMP1007,London,03-02-2025,,Senior Associate Consultant,Delivery,EMP27,1,True
+EMP1008,Chennai,01-07-2024,,Senior Software Engineer,Delivery,EMP952,1,True
+EMP1009,London,06-10-2025,,Associate Consultant,Delivery,EMP27,1,True
+EMP1010,,,,,,,0,False
+EMP1011,,,,,Delivery,,0,False
+EMP1012,,,,,,,0,False
+EMP1013,London,06-01-2025,,Senior Associate Consultant,Delivery,EMP601,1,True
+EMP1014,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP660,1,True
+EMP1015,Chennai,21-07-2025,,Solutions Consultant,Delivery,EMP231,1,True
+EMP1016,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP1017,Chennai,,,,,,0,False
+EMP1018,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP1019,,,,,,,0,False
+EMP1020,Chennai,13-12-2021,,Solutions Enabler,Delivery,EMP749,1,True
+EMP1021,New York,12-09-2022,,Senior Consultant,Delivery,EMP684,1,True
+EMP1022,London,28-01-2025,31-07-2026,Marketing Manager,Support,EMP815,1,False
+EMP1023,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP1024,London,03-11-2025,,Associate Consultant,Delivery,EMP195,1,True
+EMP1025,Chennai,03-06-2024,,Senior Software Engineer,Delivery,EMP167,1,True
+EMP1026,Chennai,16-05-2022,,Solutions Consultant,Delivery,EMP215,1,True
+EMP1027,London,02-02-2026,,Associate Consultant,Delivery,EMP679,1,True
+EMP1028,,,,,,,0,False
+EMP1029,Chennai,,,,,,0,False
+EMP1030,,,,,,,0,False
+EMP1031,New York,02-09-2019,,Principal,Delivery,EMP44,1,True
+EMP1032,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP781,1,True
+EMP1033,Chennai,24-07-2023,,Solutions Enabler,Delivery,EMP404,1,True
+EMP1034,Chennai,13-12-2021,,Solutions Enabler,Delivery,EMP357,1,True
+EMP1035,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP928,1,True
+EMP1036,London,12-07-2021,,Principal,Delivery,EMP308,1,True
+EMP1037,Chennai,22-07-2024,,Senior Software Engineer,Delivery,EMP445,1,True
+EMP1038,,,,,,,0,False
+EMP1039,Chennai,02-02-2026,,Trainee Software Engineer,Delivery,EMP981,1,True
+EMP1040,,,,,Delivery,,0,False
+EMP1041,,,,,IT Support,,0,False
+EMP1042,London,03-05-2021,,Operations Lead,Support,EMP61,1,False

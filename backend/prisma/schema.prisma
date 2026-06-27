@@ -10,45 +10,113 @@ generator client {
 }
 
 model Employee {
-  id              String       @id
-  location        String?
-  designation     String?
-  department      String?
-  allocations     Allocation[]
-  skills          Skill[]
+  id                   String        @id
+  location             String?
+  designation          String?
+  department           String?
+  // NEW: lifecycle fields required for recommendations and availability
+  date_of_join         DateTime?
+  date_of_resignation  DateTime?
+  account_status       String?
+  is_recommended_pool  Boolean       @default(true)
+  primary_skill_domain String?       // Derived from top COE in skills
+
+  allocations          Allocation[]
+  skills               Skill[]
+  competencies         Competency[]
 }
 
 model Project {
-  id              String       @id
-  start_date      DateTime?
-  end_date        DateTime?
-  status          String?
-  tech_coe        String?
-  allocations     Allocation[]
+  id                   String        @id
+  status               String?
+  tech_coe             String?
+  // NEW: date fields needed for ramp-down detection, overrun detection, and forecasting
+  project_start_date   DateTime?
+  project_end_date     DateTime?
+  type_of_project      String?
+  client_id            String?
+  project_manager      String?
+  // Derived/denormalised fields consumed by forecast endpoints
+  required_primary_domain String?
+
+  allocations          Allocation[]
+  risk_score           ProjectRiskScore?
+  weekly_statuses      WeeklyStatus[]
 }
 
 model Allocation {
-  id              String    @id @default(uuid())
-  employee_id     String
-  project_id      String
-  status          String    // e.g., BILLABLE, UNBILLED
-  start_date      DateTime?
-  end_date        DateTime?
-  percentage      Int
-  
-  employee        Employee  @relation(fields: [employee_id], references: [id])
-  project         Project   @relation(fields: [project_id], references: [id])
+  id                   String    @id @default(uuid())
+  employee_id          String
+  project_id           String
+  status               String    // BILLABLE | SHADOW | UNBILLED | BAU_OVERHEAD
+  // NEW: date + active flag needed for utilisation, roll-off, and availability windows
+  allocated_start_date DateTime?
+  allocated_end_date   DateTime?
+  is_allocation_active Boolean   @default(true)
+  is_placeholder_date  Boolean   @default(false)  // sentinel: 2030/2035 dates
+  percentage           Int       @default(0)
+  resourcing_type      String?   // BILLABLE | OPEN_REQ etc.
+
+  employee             Employee  @relation(fields: [employee_id], references: [id])
+  project              Project   @relation(fields: [project_id], references: [id])
 }
 
 model Skill {
-  id              String    @id @default(uuid())
-  employee_id     String
-  coe             String
-  skill_name      String
-  experience      String?
-  score           Int
-  
-  employee        Employee  @relation(fields: [employee_id], references: [id])
+  id          String   @id @default(uuid())
+  employee_id String
+  coe         String
+  skill_name  String
+  sub_skill   String?
+  experience  String?
+  score       Int
+
+  employee    Employee @relation(fields: [employee_id], references: [id])
+}
+
+// NEW: Competency dimension — distinct from Skill (explicit judging criterion)
+model Competency {
+  id                             String   @id @default(uuid())
+  employee_id                    String
+  role_track                     String   // e.g. "Senior Software Engineer"
+  dimension                      String   // e.g. "techno_functional"
+  score                          Float
+
+  employee                       Employee @relation(fields: [employee_id], references: [id])
+}
+
+// NEW: Pipeline model — needed for Use Cases 2a and 2b
+model PipelineRequest {
+  id               String    @id @default(uuid())
+  project_name     String?
+  client_id        String?
+  role             String?
+  canonical_role   String?
+  sow_signed       Boolean   @default(false)
+  start_date       DateTime?
+  num_weeks        Int?
+  estimated_end    DateTime?
+  allocation_pct   Int       @default(100)
+  coe              String?
+  primary_skill    String?
+  source_row       Int?      // row number from the CSV for traceability
+}
+
+// NEW: WeeklyStatus — store WSR in DB for live endpoints instead of reading CSV
+model WeeklyStatus {
+  id                  String   @id @default(uuid())
+  project_id          String
+  week_start_date     DateTime?
+  schedule_status     String?
+  scope_status        String?
+  budget_status       String?
+  quality_status      String?
+  csat_status         String?
+  team_status         String?
+  overall_status      String?
+
+  project             Project  @relation(fields: [project_id], references: [id])
+
+  @@index([project_id])
 }
 
 model SkillGap {
@@ -65,6 +133,7 @@ model AiRecommendationLog {
   requirements    String
   cosine_distance Float
   rationale_text  String
+  rank            Int      @default(1)
   generated_at    DateTime @default(now())
 }
 
@@ -75,4 +144,6 @@ model ProjectRiskScore {
   is_at_risk       Boolean
   primary_driver   String
   calculated_at    DateTime @default(now())
+
+  project          Project  @relation(fields: [project_id], references: [id])
 }
