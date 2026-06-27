@@ -1,0 +1,27 @@
+# --- General ---
+.env
+.env.local
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+
+# --- Backend (Python/Prisma) ---
+backend/node_modules/
+backend/dist/
+backend/prisma/migrations/
+# Ignore SQLite/Postgres local files
+*.db
+*.db-journal
+
+# --- Frontend (Next.js) ---
+frontend/.next/
+frontend/node_modules/
+frontend/out/
+frontend/build/
+
+# --- Data (Hackathon CSVs) ---
+# Highly recommended to keep these out of Git to keep the repo size light
+data/*.csv
+data/*.xlsx

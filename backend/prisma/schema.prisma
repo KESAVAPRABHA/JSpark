@@ -1,0 +1,78 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider             = "prisma-client-py"
+  interface            = "asyncio"
+  recursive_type_depth = 5
+}
+
+model Employee {
+  id              String       @id
+  location        String?
+  designation     String?
+  department      String?
+  allocations     Allocation[]
+  skills          Skill[]
+}
+
+model Project {
+  id              String       @id
+  start_date      DateTime?
+  end_date        DateTime?
+  status          String?
+  tech_coe        String?
+  allocations     Allocation[]
+}
+
+model Allocation {
+  id              String    @id @default(uuid())
+  employee_id     String
+  project_id      String
+  status          String    // e.g., BILLABLE, UNBILLED
+  start_date      DateTime?
+  end_date        DateTime?
+  percentage      Int
+  
+  employee        Employee  @relation(fields: [employee_id], references: [id])
+  project         Project   @relation(fields: [project_id], references: [id])
+}
+
+model Skill {
+  id              String    @id @default(uuid())
+  employee_id     String
+  coe             String
+  skill_name      String
+  experience      String?
+  score           Int
+  
+  employee        Employee  @relation(fields: [employee_id], references: [id])
+}
+
+model SkillGap {
+  id           String   @id @default(uuid())
+  role         String
+  requirements String
+  logged_at    DateTime @default(now())
+}
+
+model AiRecommendationLog {
+  id              String   @id @default(uuid())
+  employee_id     String
+  role_requested  String
+  requirements    String
+  cosine_distance Float
+  rationale_text  String
+  generated_at    DateTime @default(now())
+}
+
+model ProjectRiskScore {
+  id               String   @id @default(uuid())
+  project_id       String   @unique
+  risk_probability Float
+  is_at_risk       Boolean
+  primary_driver   String
+  calculated_at    DateTime @default(now())
+}

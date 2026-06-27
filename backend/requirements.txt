@@ -1,0 +1,11 @@
+fastapi
+uvicorn
+prisma
+pandas
+lightgbm
+scikit-learn
+chromadb
+langchain-google-genai
+langchain
+redis
+shap
