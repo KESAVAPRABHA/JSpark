@@ -26,6 +26,50 @@ import sys
 from datetime import datetime
 from prisma import Prisma
 
+# ─────────────────────────────────────────────────────────────────────────────
+# P0-3: ROLE NORMALISATION — map raw pipeline role codes → canonical designations
+# Ensures pipeline demand groups match Employee.designation values for supply matching
+# ─────────────────────────────────────────────────────────────────────────────
+ROLE_NORMALISATION = {
+    "sse":               "Senior Software Engineer",
+    "ssea":              "Senior Software Engineer",
+    "se":                "Software Engineer",
+    "tse":               "Trainee Software Engineer",
+    "p":                 "Principal",
+    "sc":                "Solution Consultant",
+    "sac":               "Associate Consultant",
+    "ac":                "Associate Consultant",
+    "sa":                "Solution Architect",
+    "solutionsenablement": "Solution Enabler",
+    "enabler":           "Solution Enabler",
+    "architect":         "Solution Architect",
+    "consultant":        "Solution Consultant",
+    "data":              "Data Scientist",   # 'data scientist' → first word 'data'
+    "analyst":           "Data Analyst",
+}
+
+
+def normalise_role(raw: str) -> str:
+    """Normalise raw pipeline role codes to canonical designation strings."""
+    if not raw:
+        return "Unknown"
+    # Try full lower-stripped match first (e.g. 'data scientist')
+    full_key = raw.strip().lower().replace("/", " ").strip()
+    if full_key in ROLE_NORMALISATION:
+        return ROLE_NORMALISATION[full_key]
+    # Special cases: 'AC/SAC' → Associate Consultant, 'SSE or SE' → Senior Software Engineer
+    if "sse" in full_key:
+        return "Senior Software Engineer"
+    if full_key.startswith("ac") or full_key.startswith("sac"):
+        return "Associate Consultant"
+    if "data scientist" in full_key:
+        return "Data Scientist"
+    if "data analyst" in full_key:
+        return "Data Analyst"
+    # Fall back to first word match
+    first_word = full_key.split()[0] if full_key.split() else ""
+    return ROLE_NORMALISATION.get(first_word, raw.strip())
+
 DATA_DIR = os.environ.get("DATA_DIR", "../data")
 # Auto-detect cleaned dir: env var takes priority, else check default path
 _default_cleaned = os.path.join(DATA_DIR, "cleaned")
@@ -524,7 +568,9 @@ async def ingest_data():
 
         for idx, row in df_pipe.iterrows():
             try:
-                role = safe_str(get_col(row, col_map["role"]))
+                role_raw = safe_str(get_col(row, col_map["role"]))
+                # P0-3: Normalise raw role codes to canonical designation strings
+                role = normalise_role(role_raw) if role_raw else "Unknown"
                 # FIX 6: handle '75/100' and '25-50' in % column
                 alloc_pct = safe_int(get_col(row, col_map["alloc_pct"]), 100)
                 # FIX 1: safe_date returns datetime objects
@@ -536,8 +582,8 @@ async def ingest_data():
                     data={
                         "project_name": safe_str(get_col(row, col_map["project_name"])),
                         "client_id": safe_str(get_col(row, col_map["client_id"])),
-                        "role": role,
-                        "canonical_role": role,
+                        "role": role_raw,       # preserve original for audit
+                        "canonical_role": role,  # normalised for matching
                         "sow_signed": sow,
                         "start_date": start_raw,
                         "num_weeks": num_weeks,

@@ -78,11 +78,18 @@ def train_health_model():
     #
     # quality_status, csat_status, team_status are the signals a PM observes BEFORE
     # schedule/scope problems surface — exactly what a predictive risk model should use.
-    features = [
-        "quality_status",
-        "csat_status",
-        "team_status",
-    ]
+    #
+    # P2-2: budget_status added as 4th feature if present in WSR data.
+    # Guard against KeyError — not all WSR exports include this column.
+    base_features = ["quality_status", "csat_status", "team_status"]
+    optional_features = ["budget_status"]  # P2-2: leading indicator, not part of label
+
+    features = base_features + [f for f in optional_features if f in df_wsr.columns]
+
+    if "budget_status" not in df_wsr.columns:
+        print("  ℹ️  budget_status column not found in WSR data — training with 3 base features only.")
+    else:
+        print("  ✓ budget_status found — training with 4 features (P2-2).")
 
     status_map = {"NO_COLOR": 0, "GREEN": 1, "AMBER": 2, "RED": 3}
     for f in features:

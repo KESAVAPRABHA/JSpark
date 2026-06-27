@@ -50,6 +50,19 @@ db = Prisma()
 
 STATUS_MAP = {"NO_COLOR": 0, "GREEN": 1, "AMBER": 2, "RED": 3}
 
+
+def _display_handle(emp) -> str:
+    """
+    P0-1: Build a human-readable label when no full_name column exists.
+    Surfaces designation + location so judges can identify people at a glance.
+    """
+    parts = [emp.id]
+    if emp.designation:
+        parts.append(f"({emp.designation})")
+    if emp.location:
+        parts.append(f"· {emp.location}")
+    return " ".join(parts)
+
 # Role-mix templates: project_type → {role: FTE_ratio}
 # Derived from historical allocation + problem statement §D&D template
 ROLE_MIX_TEMPLATES: dict[str, dict[str, float]] = {
@@ -116,7 +129,7 @@ app = FastAPI(title="JSpark — Resourcing CoLab API v2", lifespan=lifespan)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:5173"],
+    allow_origins=["http://localhost:3000", "http://localhost:5173", "http://localhost:3001", "*"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -245,6 +258,7 @@ class HealthRiskRequest(BaseModel):
     team_status: str
     schedule_status: Optional[str] = "NO_COLOR"
     scope_status: Optional[str] = "NO_COLOR"
+    budget_status: Optional[str] = "NO_COLOR"  # P2-2: added as 4th ML feature
 
 
 @app.post("/api/predict-risk")
@@ -259,6 +273,7 @@ async def predict_project_risk(req: HealthRiskRequest):
         "team_status": _status_int(req.team_status),
         "schedule_status": _status_int(req.schedule_status or "NO_COLOR"),
         "scope_status": _status_int(req.scope_status or "NO_COLOR"),
+        "budget_status": _status_int(req.budget_status or "NO_COLOR"),  # P2-2
     }
     # Only pass features the model was trained on
     input_df = pd.DataFrame([{f: input_data.get(f, 0) for f in MODEL_FEATURES}])
@@ -470,18 +485,43 @@ async def demand_forecast(req: DemandForecastRequest):
     shortfall_analysis = []
     total_shortfall_fte = 0.0
 
+    # P1-4: Build flexible role-word matching helper
+    STOP_WORDS = {"and", "or", "the", "a", "of", "in", "for"}
+
+    def _role_words(r: str) -> set:
+        return {w for w in r.lower().replace("_", " ").split() if w not in STOP_WORDS}
+
+    def _role_matches(emp_desig: str, target_role: str) -> bool:
+        """Flexible match: any shared significant word, or substring."""
+        edl = (emp_desig or "").lower()
+        rl = target_role.lower()
+        if rl in edl or edl in rl:
+            return True
+        return bool(_role_words(edl) & _role_words(rl))
+
     for role, needed in sorted(demand_by_role.items(), key=lambda x: -x[1]):
-        on_bench = len(bench.get(role, []))
-        rolling = len(rolling_off.get(role, []))
+        # P1-4: Use flexible matching instead of exact bench[role] lookup
+        on_bench_emps = [
+            emp for emp in employees
+            if _role_matches(emp.designation or "", role)
+            and emp.id in bench.get(emp.designation or "Unknown", [])
+        ]
+        rolling_emps = [
+            emp for emp in employees
+            if _role_matches(emp.designation or "", role)
+            and emp.id in rolling_off.get(emp.designation or "Unknown", [])
+        ]
+        on_bench = len(on_bench_emps)
+        rolling = len(rolling_emps)
         available = on_bench + rolling
         gap = max(0.0, needed - available)
         total_shortfall_fte += gap
 
         redeployment_candidates = []
         if gap > 0:
-            # Find partially available employees in this role
+            # Find partially available employees matching this role
             for emp in employees:
-                if (emp.designation or "") != role:
+                if not _role_matches(emp.designation or "", role):
                     continue
                 committed = sum(
                     a.percentage for a in (emp.allocations or [])
@@ -490,6 +530,7 @@ async def demand_forecast(req: DemandForecastRequest):
                 if 0 < committed < 100:
                     redeployment_candidates.append({
                         "employee_id": emp.id,
+                        "display_handle": f"{emp.id} ({emp.designation or 'Unknown'})",  # P0-1
                         "available_pct": 100 - committed,
                     })
             redeployment_candidates.sort(key=lambda x: -x["available_pct"])
@@ -525,12 +566,13 @@ async def demand_forecast(req: DemandForecastRequest):
 # ═════════════════════════════════════════════════════════════════════════════
 
 @app.get("/api/dashboard/pipeline-outlook")
-async def get_pipeline_outlook(sow_filter: str = Query("confirmed", description="confirmed | speculative | all")):
+async def get_pipeline_outlook(sow_filter: str = Query("all", description="confirmed | speculative | all")):
     """
     Deliverable 2b: Month-by-month Jul–Dec 2026 demand + supply outlook.
+    P0-2: Default changed to 'all' — only 7 rows have SOW Signed=Yes in the raw dataset.
     sow_filter=confirmed → SOW Signed=Yes (hard gate)
     sow_filter=speculative → SOW Signed=No
-    sow_filter=all → no filter
+    sow_filter=all → no filter (recommended for demo)
     """
     # Monthly buckets: Jul–Dec 2026
     MONTHS = [
@@ -551,8 +593,9 @@ async def get_pipeline_outlook(sow_filter: str = Query("confirmed", description=
 
     pipeline = await db.pipelinerequest.find_many(where=where_clause)
 
-    # Map pipeline requests to monthly demand by role
+    # Map pipeline requests to monthly demand by role AND cluster (P2-3)
     monthly_demand: dict[str, dict[str, float]] = {m: defaultdict(float) for m in MONTH_LABELS}
+    monthly_demand_by_cluster: dict[str, dict[str, float]] = {m: defaultdict(float) for m in MONTH_LABELS}
 
     for req in pipeline:
         if not req.start_date:
@@ -562,6 +605,7 @@ async def get_pipeline_outlook(sow_filter: str = Query("confirmed", description=
         end = start + timedelta(weeks=num_weeks)
         role = req.canonical_role or req.role or "Unknown"
         alloc_pct = (req.allocation_pct or 100) / 100
+        cluster = req.client_id or "Unknown"
 
         for label, (m_start, m_end) in zip(MONTH_LABELS, MONTHS):
             # Does this request overlap with this month?
@@ -569,6 +613,7 @@ async def get_pipeline_outlook(sow_filter: str = Query("confirmed", description=
             overlap_end = min(end, m_end)
             if overlap_start < overlap_end:
                 monthly_demand[label][role] += alloc_pct
+                monthly_demand_by_cluster[label][cluster] += alloc_pct  # P2-3
 
     # ── Supply: employees rolling off (becoming available) each month ──────
     employees = await db.employee.find_many(
@@ -620,6 +665,7 @@ async def get_pipeline_outlook(sow_filter: str = Query("confirmed", description=
             "total_supply_headcount": sum(supply.values()),
             "role_breakdown": role_breakdown,
             "critical_gaps": [r for r in role_breakdown if r["status"] == "SHORTFALL"],
+            "cluster_demand": dict(monthly_demand_by_cluster[label]),  # P2-3
         })
 
     return {
@@ -628,6 +674,11 @@ async def get_pipeline_outlook(sow_filter: str = Query("confirmed", description=
         "forecast_anchor": "2026-07-01",
         "forecast_end": "2026-12-31",
         "note": "Oct–Dec 2026 pipeline data is sparse (expected gap per audit). Supply projections are indicative.",
+        "data_note": (
+            "Only 7 pipeline rows have SOW Signed=Yes in the dataset. "
+            "Use sow_filter=all or sow_filter=speculative for a fuller demand picture. "
+            "This reflects real data sparsity in Oct–Dec 2026."
+        ),
         "monthly_outlook": monthly_outlook,
     }
 
@@ -664,11 +715,12 @@ async def get_allocations(
 
 
 @app.get("/api/dashboard/utilization")
-async def get_utilization(flag: Optional[str] = None):
+async def get_utilization(flag: Optional[str] = None, coe: Optional[str] = None):
     """
     Deliverable 3: Per-employee utilisation with OVER/UNDER flags.
     Excludes BAU_OVERHEAD and placeholder date allocations from utilisation maths.
     flag=OVER → only over-utilised | flag=UNDER → under-utilised | None → all
+    P1-2: coe=<domain> → filter by employee's primary_skill_domain (e.g. 'Data Engineering')
     """
     employees = await db.employee.find_many(
         where={"is_recommended_pool": True},
@@ -711,6 +763,7 @@ async def get_utilization(flag: Optional[str] = None):
 
         row = {
             "employee_id": emp.id,
+            "display_handle": _display_handle(emp),  # P0-1
             "designation": emp.designation,
             "location": emp.location,
             "primary_domain": emp.primary_skill_domain,
@@ -728,6 +781,10 @@ async def get_utilization(flag: Optional[str] = None):
     if flag:
         result = [r for r in result if r["utilization_flag"] == flag.upper()]
 
+    # P1-2: Apply COE/domain filter
+    if coe:
+        result = [r for r in result if (r.get("primary_domain") or "").lower() == coe.lower()]
+
     result.sort(key=lambda x: -x["total_utilization_pct"])
 
     over_count = sum(1 for r in result if r["utilization_flag"] == "OVER")
@@ -743,6 +800,116 @@ async def get_utilization(flag: Optional[str] = None):
         },
         "utilization": result,
     }
+
+
+@app.get("/api/dashboard/summary")
+async def get_dashboard_summary():
+    """
+    P1-1: Single-call executive summary — all key numbers in one response.
+    Use this as the 'opening slide' for the demo.
+    """
+    from datetime import datetime, timezone, timedelta
+    now = datetime.now(timezone.utc)
+
+    # At-risk project count
+    risk_scores = await db.projectriskscore.find_many(where={"is_at_risk": True})
+
+    # Bench count (active Delivery employees with zero billable allocations)
+    employees = await db.employee.find_many(
+        where={"is_recommended_pool": True},
+        include={"allocations": True},
+    )
+    bench_count = 0
+    over_util_count = 0
+    for emp in employees:
+        active_billable = [
+            a for a in (emp.allocations or [])
+            if a.is_allocation_active and a.status == "BILLABLE" and not a.is_placeholder_date
+        ]
+        total_pct = sum(a.percentage for a in active_billable)
+        if total_pct == 0:
+            bench_count += 1
+        if total_pct > 100:
+            over_util_count += 1
+
+    # Shadow/unbilled leakage count
+    shadow_allocs = await db.allocation.find_many(
+        where={"is_allocation_active": True, "status": {"in": ["SHADOW", "UNBILLED"]}}
+    )
+
+    # Overrunning projects and ramp-down in 30d
+    active_projects = await db.project.find_many(
+        where={"status": {"in": ["ACTIVE", "DEAL WON"]}}
+    )
+    overrunning = [
+        p for p in active_projects
+        if p.project_end_date and not (p.project_end_date.year >= 2030) and p.project_end_date < now
+    ]
+    ramp_down_30d = [
+        p for p in active_projects
+        if p.project_end_date
+        and not (p.project_end_date.year >= 2030)
+        and now < p.project_end_date <= now + timedelta(days=30)
+    ]
+
+    return {
+        "generated_at": now.isoformat(),
+        "headline_numbers": {
+            "projects_at_risk": len(risk_scores),
+            "employees_on_bench": bench_count,
+            "over_utilised_employees": over_util_count,
+            "shadow_unbilled_resources": len(shadow_allocs),
+            "overrunning_projects": len(overrunning),
+            "projects_ramping_down_30d": len(ramp_down_30d),
+        },
+        "actions_needed": [
+            f"{len(risk_scores)} projects flagged at-risk — review SHAP root-cause drivers",
+            f"{bench_count} employees on bench — run demand forecast to match to pipeline",
+            f"{len(overrunning)} projects overrunning — immediate PM review required",
+            f"{len(shadow_allocs)} shadow/unbilled allocations — estimated weekly revenue leak",
+        ],
+    }
+
+
+@app.get("/api/pipeline/{pipeline_id}/recommend")
+async def recommend_for_pipeline(pipeline_id: str):
+    """
+    P1-3: Auto-generate a recommendation request from a pipeline row.
+    Combines role + skillset + COE into requirements string — closes the end-to-end narrative.
+    """
+    req = await db.pipelinerequest.find_unique(where={"id": pipeline_id})
+    if not req:
+        raise HTTPException(status_code=404, detail="Pipeline request not found.")
+
+    # Build requirements text from pipeline row fields
+    parts = []
+    if req.coe:
+        parts.append(f"Centre of Excellence: {req.coe}.")
+    if req.primary_skill:
+        parts.append(f"Required skills: {req.primary_skill}.")
+    if req.project_name:
+        parts.append(f"Project context: {req.project_name}.")
+    if not parts:
+        parts.append(f"Role: {req.role or req.canonical_role or 'Unknown'}.")
+
+    requirements_text = " ".join(parts)
+    role = req.canonical_role or req.role or "Senior Software Engineer"
+
+    try:
+        result = await recommend_resource(requirements_text, role, db)
+        return {
+            "pipeline_request": {
+                "id": pipeline_id,
+                "role": req.canonical_role,
+                "coe": req.coe,
+                "start_date": req.start_date.isoformat() if req.start_date else None,
+                "sow_signed": req.sow_signed,
+                "requirements_used": requirements_text,
+            },
+            "recommendation": result,
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/api/dashboard/leakage")
@@ -785,6 +952,9 @@ async def get_financial_leakage():
             f"${min_leakage:,.0f}" if min_leakage == max_leakage
             else f"${min_leakage:,.0f} – ${max_leakage:,.0f}"
         ),
+        "weekly_leakage_usd_min": round(min_leakage),          # P2-4
+        "weekly_leakage_usd_max": round(max_leakage),          # P2-4
+        "weekly_leakage_usd_midpoint": round((min_leakage + max_leakage) / 2),  # P2-4
         "calculation_method": "Role-based banded rates with FTE% weighting and confidence intervals for unmapped roles.",
         "action_prompt": f"Redeploying {len(shadow_allocs)} shadow resources recovers up to ${max_leakage:,.0f} weekly.",
     }
