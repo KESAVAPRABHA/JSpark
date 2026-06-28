@@ -10,21 +10,25 @@ generator client {
 }
 
 model Employee {
-  id              String       @id
-  location        String?
-  designation     String?
-  department      String?
-  allocations     Allocation[]
-  skills          Skill[]
+  id                   String       @id
+  location             String?
+  designation          String?
+  department           String?
+  primary_skill_domain String?      // Used by supply-demand forecast
+  allocations          Allocation[]
+  skills               Skill[]
 }
 
 model Project {
-  id              String       @id
-  start_date      DateTime?
-  end_date        DateTime?
-  status          String?
-  tech_coe        String?
-  allocations     Allocation[]
+  id                      String       @id
+  start_date              DateTime?
+  end_date                DateTime?
+  status                  String?
+  tech_coe                String?
+  sow_status              Boolean?     // True = guaranteed pipeline demand
+  required_primary_domain String?      // Skill domain this project needs
+  project_manager         String?      // Used by team-health leaderboard
+  allocations             Allocation[]
 }
 
 model Allocation {

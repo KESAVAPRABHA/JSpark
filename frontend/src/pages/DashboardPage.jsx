@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import {
   BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend,
-  ResponsiveContainer, LineChart, Line
+  ResponsiveContainer
 } from 'recharts';
-import { getLeakage, getTeamHealth, getSupplyDemand } from '../api/client';
+import { getLeakage, getTeamHealth, getSupplyDemand, triggerBatchPredict } from '../api/client';
 import KpiCard from '../components/KpiCard';
 import LoadingSpinner from '../components/LoadingSpinner';
 
@@ -36,6 +36,21 @@ export default function DashboardPage() {
   const [forecast, setForecast]     = useState(null);
   const [loading, setLoading]       = useState(true);
   const [error, setError]           = useState(null);
+  const [batchRunning, setBatchRunning] = useState(false);
+  const [batchResult,  setBatchResult]  = useState(null);
+
+  const handleBatchPredict = async () => {
+    setBatchRunning(true);
+    setBatchResult(null);
+    try {
+      const res = await triggerBatchPredict();
+      setBatchResult({ ok: true, ...res });
+    } catch (err) {
+      setBatchResult({ ok: false, error: err.message });
+    } finally {
+      setBatchRunning(false);
+    }
+  };
 
   useEffect(() => {
     Promise.allSettled([getLeakage(), getTeamHealth(), getSupplyDemand()])
@@ -64,10 +79,47 @@ export default function DashboardPage() {
           <h1 className="page-title">Dashboard</h1>
           <p className="page-subtitle">Real-time resourcing intelligence overview</p>
         </div>
-        <span style={{ fontSize: 12, color: 'var(--text-dim)' }}>
-          Last updated: {new Date().toLocaleTimeString()}
-        </span>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <span style={{ fontSize: 12, color: 'var(--text-dim)' }}>
+            Updated: {new Date().toLocaleTimeString()}
+          </span>
+          <button
+            id="btn-batch-predict"
+            className="btn btn-secondary"
+            onClick={handleBatchPredict}
+            disabled={batchRunning}
+            title="Run LightGBM batch prediction for all projects from WSR data"
+          >
+            {batchRunning ? (
+              <><div className="spinner" style={{ width: 14, height: 14, borderWidth: 2 }} /> Running...</>
+            ) : (
+              <>🧠 Run Batch Predict</>
+            )}
+          </button>
+        </div>
       </div>
+
+      {/* Batch predict result banner */}
+      {batchResult && (
+        <div style={{
+          margin: '0 36px',
+          padding: '12px 18px',
+          borderRadius: 'var(--radius-md)',
+          background: batchResult.ok ? 'rgba(34,211,160,0.08)' : 'rgba(244,63,94,0.08)',
+          border: `1px solid ${batchResult.ok ? 'rgba(34,211,160,0.3)' : 'rgba(244,63,94,0.3)'}`,
+          fontSize: 13,
+          color: batchResult.ok ? '#34d399' : '#f87171',
+          display: 'flex',
+          alignItems: 'center',
+          gap: 10,
+        }}>
+          <span>{batchResult.ok ? '✅' : '⚠️'}</span>
+          {batchResult.ok
+            ? `Batch complete — ${batchResult.successful}/${batchResult.projects_processed} projects scored. ${batchResult.failed > 0 ? `${batchResult.failed} failed.` : ''}`
+            : `Batch predict failed: ${batchResult.error}`
+          }
+        </div>
+      )}
 
       <div className="page-body">
         {loading ? (

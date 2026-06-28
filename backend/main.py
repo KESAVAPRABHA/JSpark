@@ -13,6 +13,9 @@ import difflib
 from datetime import datetime, timedelta
 from fastapi import APIRouter, HTTPException
 from collections import defaultdict
+import asyncio
+import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='shap')
 
 
 redis_client = redis.Redis(host='localhost', port=6379, db=0, decode_responses=True, protocol=2)
@@ -472,3 +475,108 @@ async def get_team_health_scores():
     # Sort by Composite Score (Descending - Best PMs first)
     results.sort(key=lambda x: x["composite_score"], reverse=True)
     return {"leaderboard": results}
+
+
+# =================================================================
+# UTILITY: Get all available roles from the Employee table
+# Powers the dynamic role dropdown in the AI Recommender UI
+# =================================================================
+@app.get("/api/roles")
+async def get_available_roles():
+    """Returns all unique employee designations from the database."""
+    employees = await db.employee.find_many()
+    unique_roles = sorted(set(
+        emp.designation for emp in employees if emp.designation
+    ))
+    return {"roles": unique_roles}
+
+
+# =================================================================
+# UTILITY: Trigger batch ML predictions for all projects
+# =================================================================
+@app.post("/api/batch-predict")
+async def trigger_batch_predict():
+    """Runs the LightGBM batch prediction pipeline across all projects."""
+    try:
+        import datetime as dt
+
+        model = joblib.load('lgbm_project_health.pkl')
+        features = model.booster_.feature_name()
+
+        with open('optimal_threshold.txt', 'r') as f:
+            threshold = float(f.read().strip())
+
+        explainer = shap.TreeExplainer(model)
+
+        df_wsr = pd.read_csv('../data/09. 260624_Project_Weekly_Status_Details.csv')
+        latest_projects = df_wsr.drop_duplicates(subset=['project_id_masked'], keep='last').copy()
+
+        status_map = {'NO_COLOR': 0, 'GREEN': 1, 'AMBER': 2, 'RED': 3}
+        for feat in features:
+            if feat in latest_projects.columns:
+                latest_projects[feat] = (
+                    latest_projects[feat].astype(str).str.strip()
+                    .map(status_map).fillna(0).astype(int)
+                )
+
+        X_matrix = latest_projects[features].astype(int)
+        success_count = 0
+        errors = []
+
+        for idx, row in latest_projects.iterrows():
+            try:
+                X_input = X_matrix.loc[[idx]]
+                risk_prob = model.predict_proba(X_input)[0][1]
+                is_at_risk = bool(risk_prob > threshold)
+
+                raw_shap = explainer.shap_values(X_input)
+                if isinstance(raw_shap, list):
+                    shap_vals = raw_shap[1][0]
+                elif len(raw_shap.shape) == 3:
+                    shap_vals = raw_shap[0, :, 1]
+                else:
+                    shap_vals = raw_shap[0]
+
+                fi = pd.DataFrame({'feature': features, 'importance': shap_vals})
+                fi['abs'] = fi['importance'].abs()
+                primary_driver = fi.sort_values('abs', ascending=False).iloc[0]['feature']
+
+                ts = dt.datetime.now(dt.timezone.utc).isoformat().replace("+00:00", "Z")
+
+                await db.projectriskscore.upsert(
+                    where={"project_id": str(row['project_id_masked'])},
+                    data={
+                        "create": {
+                            "project_id": str(row['project_id_masked']),
+                            "risk_probability": float(risk_prob),
+                            "is_at_risk": is_at_risk,
+                            "primary_driver": f"Degradation in {primary_driver}" if is_at_risk else "Stable",
+                            "calculated_at": ts
+                        },
+                        "update": {
+                            "risk_probability": float(risk_prob),
+                            "is_at_risk": is_at_risk,
+                            "primary_driver": f"Degradation in {primary_driver}" if is_at_risk else "Stable",
+                            "calculated_at": ts
+                        }
+                    }
+                )
+                success_count += 1
+            except Exception as e:
+                errors.append({"project": str(row.get('project_id_masked', 'Unknown')), "error": str(e)})
+
+        return {
+            "status": "COMPLETE",
+            "projects_processed": len(latest_projects),
+            "successful": success_count,
+            "failed": len(errors),
+            "errors": errors[:5]  # Return first 5 errors max
+        }
+
+    except FileNotFoundError as e:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Required file not found: {e}. Ensure WSR CSV is in ../data/ and model is trained."
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))

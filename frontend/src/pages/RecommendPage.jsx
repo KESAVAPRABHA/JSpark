@@ -1,11 +1,5 @@
-import React, { useState } from 'react';
-import { postRecommend } from '../api/client';
-
-const ROLES = [
-  'Junior Consultant', 'Associate Consultant', 'Consultant',
-  'Senior Consultant', 'Lead Consultant', 'Principal Consultant',
-  'Solution Architect', 'Manager', 'Senior Manager'
-];
+import React, { useState, useEffect } from 'react';
+import { postRecommend, getRoles } from '../api/client';
 
 export default function RecommendPage() {
   const [role, setRole]           = useState('');
@@ -13,6 +7,15 @@ export default function RecommendPage() {
   const [result, setResult]       = useState(null);
   const [loading, setLoading]     = useState(false);
   const [error, setError]         = useState(null);
+  const [roles, setRoles]         = useState([]);
+  const [rolesLoading, setRolesLoading] = useState(true);
+
+  useEffect(() => {
+    getRoles()
+      .then(res => setRoles(res.roles || []))
+      .catch(() => setRoles([]))  // silently fall back if backend is down
+      .finally(() => setRolesLoading(false));
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -59,10 +62,18 @@ export default function RecommendPage() {
                   value={role}
                   onChange={e => setRole(e.target.value)}
                   required
+                  disabled={rolesLoading}
                 >
-                  <option value="">Select a role...</option>
-                  {ROLES.map(r => <option key={r} value={r}>{r}</option>)}
+                  <option value="">
+                    {rolesLoading ? 'Loading roles from database...' : roles.length === 0 ? 'No roles found — seed the DB first' : 'Select a role...'}
+                  </option>
+                  {roles.map(r => <option key={r} value={r}>{r}</option>)}
                 </select>
+                {roles.length > 0 && (
+                  <span style={{ fontSize: 11, color: 'var(--text-dim)' }}>
+                    {roles.length} designations found in database
+                  </span>
+                )}
               </div>
 
               <div className="form-group">

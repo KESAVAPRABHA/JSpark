@@ -42,3 +42,10 @@ export const postAllocate = (employee_id, project_id, percentage) =>
     method: 'POST',
     body: JSON.stringify({ employee_id, project_id, percentage }),
   });
+
+// Roles (dynamic from DB — powers Recommender dropdown)
+export const getRoles = () => apiFetch('/api/roles');
+
+// Batch ML prediction for all projects
+export const triggerBatchPredict = () =>
+  apiFetch('/api/batch-predict', { method: 'POST' });
