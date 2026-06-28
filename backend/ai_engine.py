@@ -1,523 +1,225 @@
 """
-ai_engine.py — JSpark v2 Recommendation Engine (FIXED)
+ai_engine.py — JSpark v2 Recommendation Engine (LOCAL LLM, DATA COMPLIANT)
 
-ROOT CAUSE OF EMPTY RECOMMENDATIONS (v2 bug):
-  build_vector_db() queried employees with include={"skills": True, "competencies": True}
-  but the Prisma Python client returned skills=None / competencies=None for every employee.
-  This caused `if not full_doc.strip(): continue` to skip ALL employees →
-  ChromaDB was populated with 0 documents → every query returned no results.
-
-FIX APPLIED:
-  ✅ build_vector_db() now reads directly from the pre-cleaned CSV files.
-     - 05_skills_clean.csv already has `skill_vector_text` pre-computed per row.
-       Group by employee_id → join all texts → one rich document per person.
-     - 06_competency_clean.csv has `dimension_short`, `score`, `score_label` per row.
-       Group by employee_id → generate natural-language competency sentences.
-  ✅ DB is still used for the employee pool filter (is_recommended_pool, date_of_resignation)
-     and for the availability gate (live allocation check). Only the TEXT BUILDING is CSV-sourced.
-  ✅ Falls back gracefully to DB-based skill text if CSVs are not present.
-  ✅ All v2 fixes retained: ranked top-3, availability gate, LLM rationale, flexible role match.
+CHANGES FROM PREVIOUS VERSION:
+  Gemini API replaced with local Ollama (mistral:7b-instruct)
+  ChromaDB embeddings use local nomic-embed-text via OllamaEmbeddingFunction
+  build_vector_db() reads skill_vector_text directly from clean CSVs
+  Returns ranked top-3 candidates with availability gate + seniority weighting
+  Structured JSON rationale output (parseable, not just a text blob)
+  Zero data sent to external APIs — fully compliant with JMAN data policy
 """
-
-import os
+from dotenv import load_dotenv
+load_dotenv()  # Load environment variables from .env file
+import os, json, re
 import chromadb
 from prisma import Prisma
+from local_llm import OllamaEmbeddingFunction, llm_call_with_fallback
 
-# ─────────────────────────────────────────────────────────────────────────────
-# LLM — lazy-init so the engine can be imported without crashing if key is missing
-# ─────────────────────────────────────────────────────────────────────────────
-_llm = None
+COSINE_THRESHOLD = 0.40
+TOP_N_QUERY      = 15
+TOP_N_RETURN     = 3
 
-def _get_llm():
-    global _llm
-    if _llm is None:
-        from langchain_google_genai import ChatGoogleGenerativeAI
-        _llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash-lite", temperature=0.0)
-    return _llm
+DATA_DIR    = os.environ.get("DATA_DIR", "../data")
+CLEANED_DIR = os.environ.get("CLEANED_DIR",
+    os.path.join(DATA_DIR, "cleaned") if os.path.isdir(os.path.join(DATA_DIR, "cleaned")) else DATA_DIR)
 
+SKILLS_CSV    = [os.path.join(CLEANED_DIR, "05_skills_clean.csv"), os.path.join(DATA_DIR, "05_skills_clean.csv")]
+COMP_CSV      = [os.path.join(CLEANED_DIR, "06_competency_clean.csv"), os.path.join(DATA_DIR, "06_competency_clean.csv")]
 
-# ─────────────────────────────────────────────────────────────────────────────
-# ChromaDB — cosine distance collection
-# ─────────────────────────────────────────────────────────────────────────────
+def _find_file(candidates):
+    for p in candidates:
+        if os.path.exists(p): return p
+    return None
+
+# ── ChromaDB (local embeddings via Ollama) ────────────────────────────────────
+_embedding_fn = OllamaEmbeddingFunction()
 chroma_client = chromadb.PersistentClient(path="./chroma_db")
-
 try:
     collection = chroma_client.get_or_create_collection(
         name="employee_skills",
         metadata={"hnsw:space": "cosine"},
+        embedding_function=_embedding_fn,
     )
 except Exception:
-    collection = chroma_client.get_collection(name="employee_skills")
+    collection = chroma_client.get_collection(name="employee_skills", embedding_function=_embedding_fn)
 
-COSINE_THRESHOLD = 0.65   # > 0.35 → less than 65% semantic similarity → no match
-TOP_N = 10                 # query up to 10 candidates; return top 3 available
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# DATA PATHS — resolved once at module load
-# ─────────────────────────────────────────────────────────────────────────────
-DATA_DIR = os.environ.get("DATA_DIR", "../data")
-CLEANED_DIR = os.environ.get(
-    "CLEANED_DIR",
-    os.path.join(DATA_DIR, "cleaned") if os.path.isdir(os.path.join(DATA_DIR, "cleaned")) else DATA_DIR,
-)
-
-SKILLS_CSV_CANDIDATES = [
-    os.path.join(CLEANED_DIR, "05_skills_clean.csv"),
-    os.path.join(DATA_DIR, "05_skills_clean.csv"),
-    os.path.join(DATA_DIR, "05_260624_Skill_Data.csv"),
-]
-COMPETENCY_CSV_CANDIDATES = [
-    os.path.join(CLEANED_DIR, "06_competency_clean.csv"),
-    os.path.join(DATA_DIR, "06_competency_clean.csv"),
-]
-
-def _find_file(candidates: list[str]) -> str | None:
-    for p in candidates:
-        if os.path.exists(p):
-            return p
-    return None
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# COMPETENCY LABEL MAP — dimension_short → human-readable phrase
-# ─────────────────────────────────────────────────────────────────────────────
-DIMENSION_LABELS = {
-    "techno_functional":       "Strong techno-functional expertise",
-    "consulting_advisory":     "Consulting and advisory skills",
-    "client_influence":        "Client influence and stakeholder management",
-    "communication":           "Clear communication and structured presentation",
-    "ambiguity":               "Navigates ambiguity and drives clarity under pressure",
-    "capability_articulation": "Articulates technical capabilities to business stakeholders",
-    "architecture_estimation": "Architecture estimation and solution design",
-    "project_planning":        "Project planning, delivery management, and agile execution",
+# ── Seniority weighting ────────────────────────────────────────────────────────
+SENIORITY_RANK = {
+    "principal": 8, "solution architect": 7, "technical architect": 7,
+    "senior software engineer": 6, "senior associate consultant": 5,
+    "software engineer": 5, "associate consultant": 4, "solution consultant": 4,
+    "solutions consultant": 4, "solutions enabler": 3, "solution enabler": 3,
+    "consultant": 4, "trainee software engineer": 2,
 }
 
+def _seniority_penalty(required_role: str, candidate_designation: str) -> float:
+    req  = SENIORITY_RANK.get(required_role.lower().strip(), 0)
+    cand = SENIORITY_RANK.get((candidate_designation or "").lower().strip(), 0)
+    if req == 0 or cand == 0: return 0.0
+    return max(0, req - cand - 1) * 0.07
 
-# ─────────────────────────────────────────────────────────────────────────────
-# BUILD SKILL MAP FROM CSV
-# Returns { employee_id: "combined skill_vector_text string" }
-# ─────────────────────────────────────────────────────────────────────────────
-def _build_skill_map_from_csv() -> dict[str, str]:
-    """
-    Read 05_skills_clean.csv and group skill_vector_text by employee_id.
-    The `skill_vector_text` column is already pre-computed by the data quality script.
+# ── Competency labels ──────────────────────────────────────────────────────────
+DIMENSION_LABELS = {
+    "techno_functional": "Strong techno-functional expertise",
+    "consulting_advisory": "Consulting and advisory skills",
+    "client_influence": "Client influence and stakeholder management",
+    "communication": "Clear communication and structured presentation",
+    "ambiguity": "Navigates ambiguity and drives clarity under pressure",
+    "capability_articulation": "Articulates technical capabilities to business stakeholders",
+    "architecture_estimation": "Architecture estimation and solution design",
+    "project_planning": "Project planning, delivery management, and agile execution",
+}
 
-    Returns {} if the CSV is not found (caller falls back to DB-based text).
-    """
+# ── CSV loaders ────────────────────────────────────────────────────────────────
+def _build_skill_map_from_csv() -> dict:
     import pandas as pd
+    path = _find_file(SKILLS_CSV)
+    if not path: return {}
+    print(f"  ℹ️  Skills from: {path}")
+    df = pd.read_csv(path, encoding="latin1").dropna(subset=["skill_vector_text"])
+    # Defence-in-depth: drop zero-score rows even if etl_pipeline already filtered them.
+    # Score=0 means "Lacks capability" — including them bloats the vector text and pushes
+    # documents past Ollama's 2048-token context window, causing embedding crashes.
+    if "Score" in df.columns:
+        before = len(df)
+        df["Score"] = pd.to_numeric(df["Score"], errors="coerce").fillna(0)
+        df = df[df["Score"] > 0]
+        dropped = before - len(df)
+        if dropped:
+            print(f"  ⚠️  Dropped {dropped} zero-score skill rows from vector build (Score=0 = no capability)")
+    result = df.groupby("employee_id")["skill_vector_text"].apply(lambda t: " | ".join(t)).to_dict()
+    print(f"  ✓ Skill profiles: {len(result)}")
+    return result
 
-    path = _find_file(SKILLS_CSV_CANDIDATES)
-    if path is None:
-        print("  ⚠️  skills CSV not found — falling back to DB skill text")
-        return {}
-
-    print(f"  ℹ️  Reading skill profiles from: {path}")
-    df = pd.read_csv(path, encoding="latin1")
-
-    # Drop zero-score/negative skills to prevent vector poisoning
-    score_col = next((c for c in df.columns if c.lower() == "score"), None)
-    if score_col:
-        df[score_col] = pd.to_numeric(df[score_col], errors="coerce").fillna(0)
-        df = df[df[score_col] > 0]
-
-    if "skill_vector_text" not in df.columns:
-        df["skill_vector_text"] = df.apply(_reconstruct_skill_text, axis=1)
-    else:
-        # Extra safety drop for pre-computed negative texts
-        df = df[~df["skill_vector_text"].astype(str).str.contains("Lacks capability", na=False, case=False)]
-
-    df = df.dropna(subset=["skill_vector_text"])
-    df = df[df["skill_vector_text"].str.strip() != ""]
-    
-    # Group by employee_id: join all skill texts for one employee into one document
-    skill_map = (
-        df.groupby("employee_id")["skill_vector_text"]
-        .apply(lambda texts: " | ".join(texts.tolist()))
-        .to_dict()
-    )
-    print(f"  ✓ Skill map built: {len(skill_map)} employees have skill profiles")
-    return skill_map
-
-
-def _reconstruct_skill_text(row) -> str:
-    """Fallback text builder if skill_vector_text column is absent."""
-    try:
-        skill = str(row.get("Skill") or row.get("skill_name") or "").strip()
-        sub   = str(row.get("SubSkill") or row.get("sub_skill") or "").strip()
-        exp   = str(row.get("Experience") or row.get("experience") or "").strip()
-        score = int(row.get("Score") or row.get("score") or 0)
-        label_map = {0: "no_capability", 1: "beginner", 2: "basic", 3: "competent", 4: "proficient", 5: "expert"}
-        label = label_map.get(score, "unknown")
-        name = f"{skill} - {sub}" if sub and sub.lower() != skill.lower() else skill
-        if not name.strip():
-            return ""
-        if not name.strip() or score == 0:
-            return ""
-            
-        return f"Proficient in {name} ({label}, {exp})"
-    except Exception:
-        return ""
-
-
-# ─────────────────────────────────────────────────────────────────────────────
-# BUILD COMPETENCY MAP FROM CSV
-# Returns { employee_id: "combined competency text string" }
-# ─────────────────────────────────────────────────────────────────────────────
-def _build_competency_map_from_csv() -> dict[str, str]:
-    """
-    Read 06_competency_clean.csv (long-format) and build a competency text
-    per employee.  Only scores > 0 contribute.
-
-    Expected columns: employee_id, dimension_short, score, score_label
-    Falls back gracefully if file is absent.
-    """
+def _build_competency_map_from_csv() -> dict:
     import pandas as pd
-
-    path = _find_file(COMPETENCY_CSV_CANDIDATES)
-    if path is None:
-        print("  ⚠️  competency CSV not found — competency dimension will be omitted from vector docs")
-        return {}
-
-    print(f"  ℹ️  Reading competency profiles from: {path}")
+    path = _find_file(COMP_CSV)
+    if not path: return {}
+    print(f"  ℹ️  Competency from: {path}")
     df = pd.read_csv(path, encoding="latin1")
-
-    # Normalise column names (handle both snake_case and original headers)
     df.columns = df.columns.str.strip()
-
-    emp_col = next((c for c in df.columns if c.lower() in ("employee_id", "employee id")), None)
-    dim_col = next((c for c in df.columns if "dimension_short" in c.lower() or c.lower() == "dimension"), None)
+    emp_col   = next((c for c in df.columns if c.lower() in ("employee_id", "employee id")), None)
+    dim_col   = next((c for c in df.columns if "dimension_short" in c.lower() or c.lower() == "dimension"), None)
     score_col = next((c for c in df.columns if c.lower() == "score"), None)
     label_col = next((c for c in df.columns if "score_label" in c.lower()), None)
-
-    if not emp_col or not score_col:
-        print("  ⚠️  Competency CSV missing required columns — skipping")
-        return {}
-
+    if not emp_col or not score_col: return {}
     df = df.rename(columns={emp_col: "employee_id"})
     df["score"] = pd.to_numeric(df[score_col], errors="coerce").fillna(0)
-    df = df[df["score"] > 0]   # Only demonstrated competencies contribute
-
-    comp_map: dict[str, str] = {}
+    df = df[df["score"] > 0]
+    comp_map = {}
     for emp_id, grp in df.groupby("employee_id"):
-        parts = []
-        for _, row in grp.iterrows():
-            dim  = str(row.get(dim_col or "dimension", "")).strip() if dim_col else ""
-            lbl  = str(row.get(label_col or "", "")).strip() if label_col else ""
-            sc   = float(row["score"])
-            human_label = DIMENSION_LABELS.get(dim, dim.replace("_", " ").title())
-            parts.append(f"{human_label} (competency: {lbl}, {sc:.1f}/5)")
-        if parts:
-            comp_map[str(emp_id)] = ". ".join(parts) + "."
-
-    print(f"  ✓ Competency map built: {len(comp_map)} employees have competency profiles")
+        parts = [f"{DIMENSION_LABELS.get(str(r.get(dim_col,'')).strip(), str(r.get(dim_col,'')).replace('_',' ').title())} ({str(r.get(label_col,'')).strip()}, {float(r['score']):.1f}/5)" for _, r in grp.iterrows()]
+        if parts: comp_map[str(emp_id)] = ". ".join(parts) + "."
+    print(f"  ✓ Competency profiles: {len(comp_map)}")
     return comp_map
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# BUILD VECTOR DB — called on lifespan startup if collection is empty
-# ─────────────────────────────────────────────────────────────────────────────
+# ── Build vector DB ────────────────────────────────────────────────────────────
 async def build_vector_db():
-    """
-    Build / refresh the ChromaDB vector store.
-
-    STRATEGY (CSV-first, DB-fallback):
-      1.  Load employee pool from DB  (who is eligible for recommendations)
-      2.  Load skill text from CSV    (pre-computed skill_vector_text — fast and reliable)
-      3.  Load competency text from CSV (long-format competency scores)
-      4.  Combine skill + competency text per employee
-      5.  Upsert into ChromaDB
-
-    This bypasses the broken `include={"skills": True}` DB query that returned
-    skills=None / competencies=None, causing 0 documents to be indexed.
-    """
-    import pandas as pd
-
-    db = Prisma()
-    await db.connect()
-
-    # ── Step 1: Load recommended employee pool from DB ────────────────────
-    print("  📋 Loading employee pool from DB…")
-    employees = await db.employee.find_many(
-        where={
-            "is_recommended_pool": True,
-            "date_of_resignation": None,
-        }
-    )
-    # NOTE: We do NOT use include={"skills": True} here — that's what was broken.
-    # Skill and competency text come from CSVs in steps 2 & 3.
-
+    """Build ChromaDB from clean CSVs. All embeddings local via Ollama nomic-embed-text."""
+    db = Prisma(); await db.connect()
+    print("  📋 Loading employee pool…")
+    employees = await db.employee.find_many(where={"is_recommended_pool": True, "date_of_resignation": None})
     if not employees:
-        print("  ❌ No employees found in DB with is_recommended_pool=True.")
-        print("     Run etl_pipeline.py first, then call this again.")
-        await db.disconnect()
-        return
+        print("  ❌ No employees. Run etl_pipeline.py first."); await db.disconnect(); return
+    pool = {e.id: e for e in employees}
+    print(f"  ✓ Pool: {len(pool)} employees")
 
-    pool = {emp.id: emp for emp in employees}
-    print(f"  ✓ Employee pool: {len(pool)} employees eligible for recommendations")
-
-    # ── Step 2: Build skill text map from CSV ─────────────────────────────
     skill_map = _build_skill_map_from_csv()
+    comp_map  = _build_competency_map_from_csv()
 
-    # Fallback: if CSV not found, reconstruct from DB Skill records
-    if not skill_map:
-        print("  🔄 CSV unavailable — loading skills from DB (slower)…")
-        all_skills = await db.skill.find_many(
-            where={"employee_id": {"in": list(pool.keys())}}
-        )
-        for s in all_skills:
-            if s.score > 0:
-                text = f"Proficient in {s.skill_name} (score {s.score}/5, {s.experience or ''})."
-                skill_map[s.employee_id] = skill_map.get(s.employee_id, "") + " " + text
-                
-        print(f"  ✓ DB skill map: {len(skill_map)} employees")
-
-    # ── Step 3: Build competency text map from CSV ────────────────────────
-    comp_map = _build_competency_map_from_csv()
-
-    # Fallback: if CSV not found, reconstruct from DB Competency records
-    if not comp_map:
-        print("  🔄 CSV unavailable — loading competencies from DB…")
-        all_comps = await db.competency.find_many(
-            where={"employee_id": {"in": list(pool.keys())}}
-        )
-        for c in all_comps:
-            if c.score > 0:
-                label = DIMENSION_LABELS.get(c.dimension, c.dimension.replace("_", " ").title())
-                text = f"{label} (competency score {c.score:.1f}/5)."
-                comp_map[c.employee_id] = comp_map.get(c.employee_id, "") + " " + text
-        print(f"  ✓ DB competency map: {len(comp_map)} employees")
-
-    # ── Step 4: Assemble and upsert documents ─────────────────────────────
-    docs, metadatas, ids = [], [], []
-    no_skill_count = 0
-
+    docs, metadatas, ids, skipped = [], [], [], 0
     for emp_id, emp in pool.items():
-        skill_text = (skill_map.get(emp_id) or "").strip()
-        comp_text  = (comp_map.get(emp_id) or "").strip()
-
-        if not skill_text and not comp_text:
-            # Employee is in pool but has no skill/competency data
-            no_skill_count += 1
-            continue   # Skip — indexing empty docs would corrupt similarity scores
-
-        full_doc = skill_text
-        if comp_text:
-            full_doc += " || COMPETENCY: " + comp_text
-
+        st = (skill_map.get(emp_id) or "").strip()
+        ct = (comp_map.get(emp_id) or "").strip()
+        if not st and not ct: skipped += 1; continue
+        full_doc = st + (" || COMPETENCY: " + ct if ct else "")
         docs.append(full_doc)
-        metadatas.append({
-            "employee_id":    emp_id,
-            "designation":    emp.designation or "Unknown",
-            "primary_domain": emp.primary_skill_domain or "Unknown",
-            "location":       emp.location or "Unknown",
-        })
+        metadatas.append({"employee_id": emp_id, "designation": emp.designation or "Unknown",
+                          "primary_domain": emp.primary_skill_domain or "Unknown", "location": emp.location or "Unknown"})
         ids.append(emp_id)
 
-    if no_skill_count:
-        print(f"  ⚠️  {no_skill_count} pool employees skipped — no skill or competency data found")
+    if skipped: print(f"  ⚠️  {skipped} skipped (no data)")
+    if not docs: print(f"  ❌ No documents. Check CSV paths: {SKILLS_CSV}"); await db.disconnect(); return
 
-    if not docs:
-        print(
-            "  ❌ Zero documents to index.  Likely causes:\n"
-            "     1. skills CSV not found at expected path (check DATA_DIR / CLEANED_DIR env vars)\n"
-            "     2. employee_ids in skills CSV don't match employee_ids in DB\n"
-            "     3. ETL was not run — DB has employees but no skill records\n"
-            f"     Expected skills CSV at: {SKILLS_CSV_CANDIDATES}"
-        )
-        await db.disconnect()
-        return
-
-    # Upsert into existing collection.
-    # IDs are employee_ids — upserting with the same ID cleanly overwrites
-    # stale documents, so this works for both initial build and refresh.
-    # We avoid delete+recreate because `from ai_engine import collection`
-    # in main.py would hold a stale reference to the deleted object.
+    print(f"  🔢 Embedding {len(docs)} documents locally (nomic-embed-text)…")
     collection.upsert(documents=docs, metadatas=metadatas, ids=ids)
-
-    # Verify
-    count = collection.count()
-    print(
-        f"\n  ✅ Vector DB built successfully:\n"
-        f"     • {count} employee profiles indexed\n"
-        f"     • {len([d for d in docs if 'COMPETENCY' in d])} profiles include competency dimension\n"
-        f"     • {len([d for d in docs if 'COMPETENCY' not in d])} profiles are skill-only\n"
-        f"     • Cosine similarity threshold: {COSINE_THRESHOLD}"
-    )
-
+    print(f"  ✅ {collection.count()} profiles indexed | all local, data compliant")
     await db.disconnect()
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# AVAILABILITY CHECK — prevents recommending over-committed employees
-# ─────────────────────────────────────────────────────────────────────────────
+# ── Availability check ─────────────────────────────────────────────────────────
 async def _get_available_capacity(employee_id: str, db: Prisma) -> int:
-    """
-    Return remaining capacity % for an employee.
-    Excludes placeholder-date allocations (CLIENT_127 BAU overhead) from the sum.
-    100 = fully available, 0 = fully committed.
-    """
-    active_allocs = await db.allocation.find_many(
-        where={
-            "employee_id": employee_id,
-            "is_allocation_active": True,
-            "status": {"not": "BAU_OVERHEAD"},
-            "is_placeholder_date": False,   # exclude rolling-placeholder rows
-        }
-    )
-    committed = sum(
-        a.percentage for a in active_allocs
-        if a.status not in ("SHADOW", "BAU_OVERHEAD")
-    )
+    active = await db.allocation.find_many(
+        where={"employee_id": employee_id, "is_allocation_active": True,
+               "is_placeholder_date": False, "status": {"not": "BAU_OVERHEAD"}})
+    committed = sum(a.percentage for a in active if a.status not in ("SHADOW", "BAU_OVERHEAD"))
     return max(0, 100 - committed)
 
-
-# ─────────────────────────────────────────────────────────────────────────────
-# RECOMMEND — ranked list of top 3 available candidates
-# ─────────────────────────────────────────────────────────────────────────────
-async def recommend_resource(project_requirements: str, required_role: str, db: Prisma):
-    """
-    Returns a ranked list of up to 3 available candidates.
-    Each candidate includes: employee_id, rank, cosine_distance,
-    skill_match_pct, available_capacity_pct, rationale.
-    """
-
-    # ── Sanity check: collection must have documents ──────────────────────
+# ── Recommend resource ─────────────────────────────────────────────────────────
+async def recommend_resource(project_requirements: str, required_role: str, db: Prisma) -> dict:
     count = collection.count()
     if count == 0:
-        return {
-            "status": "ERROR",
-            "signal": "Vector DB is empty",
-            "reason": (
-                "ChromaDB has 0 documents. Call POST /api/vector-db/rebuild "
-                "or restart the server (auto-rebuild runs on startup when empty)."
-            ),
-            "candidates": [],
-        }
+        return {"status": "ERROR", "signal": "Vector DB empty", "candidates": [],
+                "reason": "Call POST /api/vector-db/rebuild or delete chroma_db/ and restart."}
 
     role_lower = required_role.lower().strip()
+    STOP = {"and", "or", "the", "a", "of", "in", "for", "sr", "jr"}
 
-    results = collection.query(
-        query_texts=[project_requirements],
-        n_results=min(TOP_N, count),
-        # No `where` filter: flexible role matching done in Python below.
-        # Exact-string `where` filters cause misses on "SSE" vs "Senior Software Engineer".
-    )
-
+    results = collection.query(query_texts=[project_requirements], n_results=min(TOP_N_QUERY, count))
     if not results["ids"][0]:
-        return {
-            "status": "NO_MATCH_FOUND",
-            "signal": "Initiate Hire",
-            "reason": "Vector search returned no results.",
-            "candidates": [],
-        }
+        return {"status": "NO_MATCH_FOUND", "signal": "Initiate Hire", "candidates": [],
+                "reason": "No semantic results."}
 
     candidates = []
-    for emp_id, distance, doc, meta in zip(
-        results["ids"][0],
-        results["distances"][0],
-        results["documents"][0],
-        results["metadatas"][0],
-    ):
+    for emp_id, raw_dist, doc, meta in zip(
+            results["ids"][0], results["distances"][0], results["documents"][0], results["metadatas"][0]):
         designation = (meta.get("designation") or "").lower()
-
-        # ── Flexible role match ──────────────────────────────────────────
-        # Accept if ANY meaningful word from the requested role appears in designation.
-        # Stop-words ("and", "or", "the") are excluded to avoid false matches.
-        STOP = {"and", "or", "the", "a", "of", "in", "for"}
-        role_words = {w for w in role_lower.replace("_", " ").split() if w not in STOP}
-        desig_words = set(designation.split())
-        role_match = bool(role_words & desig_words) or (role_lower in designation)
-
-        if not role_match:
+        role_words  = {w for w in role_lower.replace("_", " ").split() if w not in STOP}
+        if not (role_words & set(designation.split())) and role_lower not in designation:
             continue
+        penalty      = _seniority_penalty(required_role, meta.get("designation", ""))
+        adjusted     = float(raw_dist) + penalty
+        if adjusted > COSINE_THRESHOLD: continue
+        avail = await _get_available_capacity(emp_id, db)
+        if avail <= 0: continue
+        candidates.append({"employee_id": emp_id, "designation": meta.get("designation"),
+            "primary_domain": meta.get("primary_domain"), "location": meta.get("location"),
+            "cosine_distance": round(float(raw_dist), 3), "seniority_penalty": round(penalty, 3),
+            "skill_match_pct": round((1 - float(raw_dist)) * 100, 1),
+            "available_capacity_pct": avail, "_doc": doc})
+        if len(candidates) >= TOP_N_RETURN: break
 
-        # ── Cosine distance gate ─────────────────────────────────────────
-        if distance > COSINE_THRESHOLD:
-            continue
-
-        # ── Availability gate ────────────────────────────────────────────
-        available_pct = await _get_available_capacity(emp_id, db)
-        if available_pct <= 0:
-            continue  # Fully committed — skip
-
-        candidates.append({
-            "employee_id":         emp_id,
-            "designation":         meta.get("designation"),
-            "primary_domain":      meta.get("primary_domain"),
-            "location":            meta.get("location"),
-            "cosine_distance":     round(float(distance), 3),
-            "skill_match_pct":     round((1 - float(distance)) * 100, 1),
-            "available_capacity_pct": available_pct,
-            "doc":                 doc,
-        })
-
-        if len(candidates) >= 3:
-            break   # We have our top 3
-
-    # ── No candidates after all filters ──────────────────────────────────
     if not candidates:
-        return {
-            "status": "NO_MATCH_FOUND",
-            "signal": "Initiate Hire",
-            "reason": (
-                f"No available employee with role matching '{required_role}' found "
-                f"within cosine threshold {COSINE_THRESHOLD}. "
-                f"All semantic matches are either fully allocated or below quality threshold. "
-                f"(Vector DB contains {count} indexed profiles.)"
-            ),
-            "candidates": [],
-        }
+        return {"status": "NO_MATCH_FOUND", "signal": "Initiate Hire", "candidates": [],
+                "reason": f"No available '{required_role}' within threshold {COSINE_THRESHOLD}."}
 
-    # ── Generate LLM rationale per candidate ─────────────────────────────
-    llm = _get_llm()
-    from langchain_core.prompts import PromptTemplate
-
-    rationale_prompt = PromptTemplate(
-        input_variables=["rank", "emp_id", "skills", "reqs", "capacity", "location"],
-        template=(
-            "You are a Resourcing Matchmaker for a data & AI consultancy. "
-            "Write exactly 3 concise bullet points (max 20 words each) "
-            "defending why {emp_id} (ranked #{rank}, {capacity}% capacity free, based in {location}) "
-            "is a strong match for this project request.\n"
-            "Project Requirements: {reqs}\n"
-            "Employee Skill & Competency Profile: {skills}\n"
-            "Rules: Start each bullet with '•'. Be specific — name skills and competency dimensions. "
-            "Do not use generic phrases like 'strong candidate'."
-        ),
+    SYSTEM = ("You are a resource allocation AI. Respond ONLY with valid JSON. No markdown. No preamble.")
+    PROMPT = (
+        "Employee: {emp_id} | {designation} | {location} | {capacity}% free\n"
+        "Profile: {skills}\nRequirements: {requirements}\nRole: {role}\n"
+        "Respond ONLY with JSON:\n"
+        '{"match_confidence":<0-100>,"top_matching_skills":["s1","s2","s3"],'
+        '"skill_gaps":["g1"],"availability_note":"<1 sentence>","rationale":"<2-3 sentences>",'
+        '"risk_flag":<null or "SKILL_GAP" or "JUNIOR_FOR_ROLE" or "APPROACHING_RESIGNATION">}'
     )
 
     ranked = []
     for rank, c in enumerate(candidates, 1):
+        prompt = PROMPT.format(emp_id=c["employee_id"], designation=c["designation"],
+            location=c["location"], capacity=c["available_capacity_pct"],
+            skills=c["_doc"][:1500], requirements=project_requirements, role=required_role)
+        raw, model_used = llm_call_with_fallback(prompt, SYSTEM, max_tokens=350, expect_json=True)
         try:
-            resp = llm.invoke(
-                rationale_prompt.format(
-                    rank=rank,
-                    emp_id=c["employee_id"],
-                    skills=c["doc"][:1200],   # truncate to stay within LLM token budget
-                    reqs=project_requirements,
-                    capacity=c["available_capacity_pct"],
-                    location=c.get("location", "Unknown"),
-                )
-            )
-            rationale = resp.content.strip()
-        except Exception as exc:
-            rationale = f"Rationale unavailable ({exc}). Check GOOGLE_API_KEY."
+            s = json.loads(re.sub(r"```(?:json)?|```", "", raw).strip())
+        except Exception:
+            s = {"match_confidence": round(c["skill_match_pct"]), "top_matching_skills": [],
+                 "skill_gaps": [], "availability_note": "", "rationale": raw[:300], "risk_flag": None}
+        ranked.append({**{k: v for k, v in c.items() if not k.startswith("_")},
+            "rank": rank, "match_confidence": s.get("match_confidence", c["skill_match_pct"]),
+            "top_matching_skills": s.get("top_matching_skills", []),
+            "skill_gaps": s.get("skill_gaps", []),
+            "availability_note": s.get("availability_note", ""),
+            "rationale": s.get("rationale", ""), "risk_flag": s.get("risk_flag"),
+            "llm_model": model_used})
 
-        ranked.append({
-            "rank":                  rank,
-            "employee_id":           c["employee_id"],
-            "designation":           c["designation"],
-            "primary_domain":        c["primary_domain"],
-            "location":              c["location"],
-            "cosine_distance":       c["cosine_distance"],
-            "skill_match_pct":       c["skill_match_pct"],
-            "available_capacity_pct": c["available_capacity_pct"],
-            "rationale":             rationale,
-        })
-
-    return {
-        "status":        "MATCH_FOUND",
-        "candidates":    ranked,
-        "top_candidate": ranked[0],   # backward-compat convenience field
-    }
+    return {"status": "MATCH_FOUND", "candidates": ranked, "top_candidate": ranked[0]}

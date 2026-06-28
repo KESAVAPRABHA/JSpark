@@ -211,6 +211,7 @@ def clean_and_prepare_data():
 
     # ── 05 SKILLS ──────────────────────────────────────────────────────────
     df_skills = _load("05_skills_clean.csv", "05_260624_Skill_Data.csv")
+    df_skills = df_skills[df_skills['Score'] > 0]
     # Handle both raw Excel headers (with 'COE Skill') and cleaned CSV
     df_skills.columns = df_skills.columns.str.strip()
     df_skills["Score"] = pd.to_numeric(df_skills["Score"], errors="coerce").fillna(0).astype(int)
@@ -303,13 +304,34 @@ def clean_and_prepare_data():
         print("  ⚠️  WSR file not found — project health scores will be empty")
         df_wsr = pd.DataFrame()
 
+    # ── 04 TIMESHEET (Fix 6A — wire real is_billable hours to leakage) ────
+    ts_candidates = []
+    if CLEANED_DIR:
+        ts_candidates.append(os.path.join(CLEANED_DIR, "04_timesheet_clean.csv"))
+    ts_candidates += [
+        os.path.join(DATA_DIR, "04. 260624 timesheet_details_2026.csv"),
+        os.path.join(DATA_DIR, "04_timesheet_details_2026.csv"),
+        os.path.join(DATA_DIR, "04_260624_timesheet_details_2026.csv"),
+    ]
+    df_timesheet = None
+    for p in ts_candidates:
+        if os.path.exists(p):
+            df_timesheet = pd.read_csv(p, encoding="latin1")
+            df_timesheet.columns = df_timesheet.columns.str.strip().str.lower().str.replace(
+                r"[\s\n]+", "_", regex=True
+            )
+            print(f"  ✓ Timesheet: {len(df_timesheet)} rows from {p}")
+            break
+    if df_timesheet is None:
+        print("  ⚠️  Timesheet file not found — leakage will use rate-card estimate only")
+
     # Fix CLIENT_661 dash→underscore in project_id
     if df_wsr is not None and "project_id_masked" in df_wsr.columns:
         df_wsr["project_id_masked"] = df_wsr["project_id_masked"].astype(str).str.replace(
             r"CLIENT_661-", "CLIENT_661_", regex=True
         )
 
-    return df_emp, df_proj, df_alloc, df_skills, df_comp, df_pipe, df_wsr
+    return df_emp, df_proj, df_alloc, df_skills, df_comp, df_pipe, df_wsr, df_timesheet
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -350,7 +372,7 @@ async def ingest_data():
     await db.project.delete_many()
     await db.employee.delete_many()
 
-    df_emp, df_proj, df_alloc, df_skills, df_comp, df_pipe, df_wsr = clean_and_prepare_data()
+    df_emp, df_proj, df_alloc, df_skills, df_comp, df_pipe, df_wsr, df_timesheet = clean_and_prepare_data()
 
     primary_domain_map = derive_primary_domains(df_skills)
 
@@ -659,6 +681,97 @@ async def ingest_data():
                     _log_warning(f"WSR for {pid} failed: {e}")
 
     print(f"  ✓ {wsr_count} WSR records ingested | {wsr_skipped_fk} skipped (FK miss) | {wsr_errors} errors")
+
+    # ── TIMESHEET ENTRIES (Fix 6A) ─────────────────────────────────────────
+    print("\n⏱  Ingesting Timesheet Entries…")
+    ts_count = 0
+    ts_errors = 0
+    ts_skipped = 0
+
+    if df_timesheet is not None and not df_timesheet.empty:
+        # Identify key columns — timesheet files have inconsistent naming
+        eid_col   = next((c for c in df_timesheet.columns if "employee" in c and "id" in c), None)
+        pid_col   = next((c for c in df_timesheet.columns if "project" in c and "id" in c), None)
+        bill_col  = next((c for c in df_timesheet.columns if "billable" in c or "is_bill" in c), None)
+        hours_col = next((c for c in df_timesheet.columns
+                          if c in ("time", "hours", "duration", "time_hours", "hours_logged")), None)
+        date_col  = next((c for c in df_timesheet.columns
+                          if c in ("date", "entry_date", "timesheet_date", "week_date")), None)
+        job_col   = next((c for c in df_timesheet.columns
+                          if c in ("job_name", "job", "task", "activity")), None)
+
+        if not eid_col:
+            print("  ⚠️  Timesheet: cannot find employee_id column — skipping")
+        else:
+            # Only take last 90 days of data to keep DB lean and demo fast
+            if date_col:
+                df_timesheet[date_col] = pd.to_datetime(
+                    df_timesheet[date_col], dayfirst=True, format="mixed", errors="coerce"
+                )
+                cutoff_ts = pd.Timestamp.now() - pd.Timedelta(days=90)
+                df_ts_recent = df_timesheet[df_timesheet[date_col] >= cutoff_ts].copy()
+                if df_ts_recent.empty:
+                    # If no recent data, take the most recent 3000 rows
+                    df_ts_recent = df_timesheet.sort_values(
+                        date_col, ascending=False
+                    ).head(3000).copy()
+            else:
+                df_ts_recent = df_timesheet.head(5000).copy()  # cap at 5000 if no date
+
+            print(f"  ℹ️  Processing {len(df_ts_recent)} timesheet rows (last 90 days or most recent)")
+
+            for _, row in df_ts_recent.iterrows():
+                try:
+                    emp_id = safe_str(row.get(eid_col))
+                    if not emp_id or emp_id not in emp_ids_ingested:
+                        ts_skipped += 1
+                        continue
+
+                    # Parse is_billable — handles True/False/Yes/No/1/0
+                    raw_bill = row.get(bill_col) if bill_col else True
+                    if isinstance(raw_bill, bool):
+                        is_billable = raw_bill
+                    elif isinstance(raw_bill, (int, float)):
+                        is_billable = bool(raw_bill)
+                    else:
+                        is_billable = str(raw_bill).strip().upper() in ("TRUE", "YES", "Y", "1", "BILLABLE")
+
+                    hours = float(row.get(hours_col) or 0) if hours_col else 0.0
+                    if hours <= 0 or hours > 24:  # sanity-cap at 24h per entry
+                        ts_skipped += 1
+                        continue
+
+                    # Parse entry date
+                    entry_dt = None
+                    if date_col:
+                        raw_dt = row.get(date_col)
+                        if pd.notna(raw_dt):
+                            entry_dt = raw_dt.to_pydatetime() if hasattr(raw_dt, "to_pydatetime") else safe_date(raw_dt)
+
+                    # Project ID (optional FK — don't skip if missing)
+                    proj_id = safe_str(row.get(pid_col)) if pid_col else None
+                    if proj_id and proj_id not in proj_ids_ingested:
+                        proj_id = None  # clear invalid FK
+
+                    await db.timesheetentry.create(
+                        data={
+                            "employee_id": emp_id,
+                            "project_id":  proj_id,
+                            "is_billable": is_billable,
+                            "hours":       hours,
+                            "entry_date":  entry_dt,
+                            "job_name":    safe_str(row.get(job_col)) if job_col else None,
+                        }
+                    )
+                    ts_count += 1
+                except Exception as e:
+                    ts_errors += 1
+                    if ts_errors <= 3:
+                        _log_warning(f"Timesheet row failed: {e}")
+    else:
+        print("  ℹ️  Timesheet not loaded — leakage endpoint will use rate-card only")
+
+    print(f"  ✓ {ts_count} timesheet entries ingested | {ts_skipped} skipped | {ts_errors} errors")
 
     print("\n✅ ETL complete — all data ingested.")
     await db.disconnect()

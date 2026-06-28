@@ -2,14 +2,19 @@ fastapi
 uvicorn[standard]
 prisma
 pandas
+openpyxl
 lightgbm
 scikit-learn
 chromadb
-langchain-google-genai
 langchain
 langchain-core
+langchain-google-genai   # optional fallback only — not needed if Ollama is running
 redis
 shap
 numpy
 python-dotenv
-openpyxl
+httpx
+groq                     # optional fallback only
+requests                 # for Ollama HTTP calls (already in stdlib on most setups)
+sentence-transformers    # fallback embeddings if Ollama nomic-embed-text unavailable
+joblib

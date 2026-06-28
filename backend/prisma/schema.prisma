@@ -24,6 +24,7 @@ model Employee {
   allocations          Allocation[]
   skills               Skill[]
   competencies         Competency[]
+  timesheet_entries    TimesheetEntry[]
 }
 
 model Project {
@@ -146,4 +147,22 @@ model ProjectRiskScore {
   calculated_at    DateTime @default(now())
 
   project          Project  @relation(fields: [project_id], references: [id])
+}
+
+// TimesheetEntry — wires real is_billable hours to leakage calculation (Fix 6A)
+// Source: 04_timesheet_clean.csv (128,527 rows)
+model TimesheetEntry {
+  id           String    @id @default(uuid())
+  employee_id  String
+  project_id   String?
+  is_billable  Boolean   @default(true)
+  hours        Float     @default(0)
+  entry_date   DateTime?
+  job_name     String?
+
+  employee     Employee  @relation(fields: [employee_id], references: [id])
+
+  @@index([employee_id])
+  @@index([entry_date])
+  @@index([is_billable])
 }
