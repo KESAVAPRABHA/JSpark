@@ -1,0 +1,217 @@
+/* =============================================
+   LOGIN PAGE STYLES
+   ============================================= */
+
+.login-page {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ---- LEFT PANEL ---- */
+.login-left {
+  flex: 0 0 45%;
+  background: linear-gradient(160deg, #2d1b69 0%, #1a0a3d 60%, #0f0720 100%);
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Ambient glow behind logo */
+.login-left-orb {
+  position: absolute;
+  width: 280px;
+  height: 280px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(124,58,237,0.22) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+/* Logo area */
+.login-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  z-index: 2;
+  position: relative;
+}
+
+.login-brand-name {
+  font-size: 22px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.88);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ---- DIVIDER ---- */
+.login-divider {
+  position: absolute;
+  left: calc(45% - 30px);
+  top: 0;
+  width: 60px;
+  height: 100%;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.login-divider svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ---- RIGHT PANEL ---- */
+.login-right {
+  flex: 1;
+  background: linear-gradient(135deg, #3b1f7a 0%, #6d28d9 40%, #7c3aed 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle noise/glow overlay */
+.login-right::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 70% 30%, rgba(192,38,211,0.18) 0%, transparent 60%),
+              radial-gradient(ellipse at 20% 80%, rgba(109,40,217,0.25) 0%, transparent 55%);
+}
+
+.login-right-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+.login-heading {
+  font-size: 32px;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.6px;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.login-subheading {
+  font-size: 14px;
+  color: rgba(255,255,255,0.7);
+  margin-bottom: 36px;
+  letter-spacing: 0.2px;
+}
+
+/* ---- MICROSOFT BUTTON ---- */
+.ms-login-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  padding: 0;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #b026d6, #c026d3, #a21caf);
+  box-shadow: 0 6px 24px rgba(192,38,211,0.5), 0 2px 8px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
+  overflow: hidden;
+  min-width: 240px;
+  height: 52px;
+}
+
+.ms-login-btn:hover:not(:disabled) {
+  box-shadow: 0 10px 32px rgba(192,38,211,0.7), 0 4px 16px rgba(0,0,0,0.4);
+  transform: translateY(-2px);
+}
+
+.ms-login-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.ms-login-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.85;
+}
+
+.ms-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.12);
+  width: 52px;
+  height: 52px;
+  flex-shrink: 0;
+}
+
+.ms-login-btn span:not(.ms-logo-wrap) {
+  flex: 1;
+  text-align: center;
+  font-size: 14.5px;
+  font-weight: 600;
+  color: #ffffff;
+  letter-spacing: 0.2px;
+  padding-right: 16px;
+}
+
+.ms-login-btn.loading span:not(.ms-btn-spinner) {
+  padding: 0 20px;
+  text-align: center;
+}
+
+/* Loading state */
+.ms-login-btn.loading {
+  justify-content: center;
+  gap: 12px;
+  padding: 0 24px;
+}
+
+.ms-btn-spinner {
+  width: 18px;
+  height: 18px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: white;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* Footer note */
+.login-footer-note {
+  margin-top: 24px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  max-width: 280px;
+  line-height: 1.5;
+}
+
+/* =============================================
+   FLOATING SHAPES ANIMATION
+   ============================================= */
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); }
+  33%       { transform: translateY(-10px) rotate(4deg) scale(1.02); }
+  66%       { transform: translateY(6px) rotate(-3deg) scale(0.98); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* =============================================
+   RESPONSIVE
+   ============================================= */
+@media (max-width: 640px) {
+  .login-left { display: none; }
+  .login-divider { display: none; }
+  .login-right { flex: 1; }
+  .login-heading { font-size: 24px; }
+}
